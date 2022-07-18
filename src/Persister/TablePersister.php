@@ -1,8 +1,8 @@
 <?php
 
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
-use AuditStash\PersisterInterface;
+use AuditLog\PersisterInterface;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -136,14 +136,14 @@ class TablePersister implements PersisterInterface
          * use this to always add some fields as a separate fields from the meta data fields.
          * In the app.php ...
          *
-         * 'AuditStash' => [
-                'persister' => 'AuditStash\Persister\TablePersister',
+         * 'AuditLog' => [
+                'persister' => 'AuditLog\Persister\TablePersister',
                 'extractMetaFields' => [
                     'key_in_meta_data_array' => 'db_table_column_name'
                 ],
             ]
         */
-        $this->setConfig('extractMetaFields', Configure::read('AuditStash.extractMetaFields') ?: false);
+        $this->setConfig('extractMetaFields', Configure::read('AuditLog.extractMetaFields') ?: false);
     }
 
     /**
@@ -186,7 +186,7 @@ class TablePersister implements PersisterInterface
     /**
      * Persists each of the passed EventInterface objects.
      *
-     * @param \AuditStash\EventInterface[] $auditLogs List of EventInterface objects to persist
+     * @param \AuditLog\EventInterface[] $auditLogs List of EventInterface objects to persist
      * @return void
      */
     public function logEvents(array $auditLogs)

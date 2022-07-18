@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Test\Fixture;
+namespace AuditLog\Test\Fixture;
 
 use Cake\ElasticSearch\TestSuite\TestFixture;
 

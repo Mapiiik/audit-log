@@ -1,9 +1,9 @@
 <?php
 
-namespace AuditStash\Test\Meta;
+namespace AuditLog\Test\Meta;
 
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Meta\ApplicationMetadata;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Meta\ApplicationMetadata;
 use Cake\Event\EventDispatcherTrait;
 use Cake\TestSuite\TestCase;
 
@@ -22,7 +22,7 @@ class ApplicationMetadataTest extends TestCase
         $listener = new ApplicationMetadata('my_app', ['extra' => 'thing']);
         $this->getEventManager()->on($listener);
         $logs[] = new AuditDeleteEvent(1234, 1, 'articles');
-        $event = $this->dispatchEvent('AuditStash.beforeLog', ['logs' => $logs]);
+        $event = $this->dispatchEvent('AuditLog.beforeLog', ['logs' => $logs]);
 
         $expected = [
             'app_name' => 'my_app',

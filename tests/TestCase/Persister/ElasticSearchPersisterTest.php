@@ -1,11 +1,11 @@
 <?php
 
-namespace AuditStash\Test\Persister;
+namespace AuditLog\Test\Persister;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Event\AuditUpdateEvent;
-use AuditStash\Persister\ElasticSearchPersister;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Event\AuditUpdateEvent;
+use AuditLog\Persister\ElasticSearchPersister;
 use Cake\Datasource\ConnectionManager;
 use Cake\ElasticSearch\IndexRegistry;
 use Cake\I18n\Time;
@@ -20,10 +20,10 @@ class ElasticSearchPersisterTest extends TestCase
      * @var string
      */
     public $fixtures = [
-        'plugin.AuditStash.ElasticArticles',
-        'plugin.AuditStash.ElasticAudits',
-        'plugin.AuditStash.ElasticAuthors',
-        'plugin.AuditStash.ElasticTags',
+        'plugin.AuditLog.ElasticArticles',
+        'plugin.AuditLog.ElasticAudits',
+        'plugin.AuditLog.ElasticAuthors',
+        'plugin.AuditLog.ElasticTags',
     ];
 
     /**

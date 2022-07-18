@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash;
+namespace AuditLog;
 
 /**
  * Represents any object that is capable of persisting an array of

@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Meta;
+namespace AuditLog\Meta;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -36,14 +36,14 @@ class ApplicationMetadata implements EventListenerInterface
      */
     public function implementedEvents(): array
     {
-        return ['AuditStash.beforeLog' => 'beforeLog'];
+        return ['AuditLog.beforeLog' => 'beforeLog'];
     }
 
     /**
      * Enriches all of the passed audit logs to add the request
      * info metadata.
      *
-     * @param Event The AuditStash.beforeLog event
+     * @param Event The AuditLog.beforeLog event
      * @param array $logs The audit log event objects
      * @return void
      */

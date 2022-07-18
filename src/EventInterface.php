@@ -1,5 +1,5 @@
 <?php
-namespace AuditStash;
+namespace AuditLog;
 
 use JsonSerializable;
 use Serializable;

@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Action;
+namespace AuditLog\Action;
 
 use DateTime;
 

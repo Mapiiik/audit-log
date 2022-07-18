@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Event;
+namespace AuditLog\Event;
 
 /**
  * Implements most of the methods of the EventInterface.

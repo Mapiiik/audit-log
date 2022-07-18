@@ -1,5 +1,5 @@
 <?php
-namespace AuditStash\Action;
+namespace AuditLog\Action;
 
 use Cake\ElasticSearch\IndexRegistry;
 use Cake\Event\Event;
@@ -18,11 +18,11 @@ class ElasticLogsViewAction extends ViewAction
     /**
      * Returns the Repository object to use.
      *
-     * @return AuditStash\Model\Index\AuditLogsIndex;
+     * @return AuditLog\Model\Index\AuditLogsIndex;
      */
     protected function _table()
     {
-        return $this->_controller()->AuditLogs = IndexRegistry::get('AuditStash.AuditLogs');
+        return $this->_controller()->AuditLogs = IndexRegistry::get('AuditLog.AuditLogs');
     }
 
     /**
@@ -30,7 +30,7 @@ class ElasticLogsViewAction extends ViewAction
      *
      * @param string $id Record id
      * @param \Crud\Event\Subject $subject Event subject
-     * @return \AuditStash\Model\Document\AuditLog
+     * @return \AuditLog\Model\Document\AuditLog
      */
     protected function _findRecord($id, Subject $subject)
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace AuditStash\Event;
+namespace AuditLog\Event;
 
-use AuditStash\EventInterface;
+use AuditLog\EventInterface;
 use DateTime;
 
 /**

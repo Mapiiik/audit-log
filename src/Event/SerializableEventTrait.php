@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Event;
+namespace AuditLog\Event;
 
 /**
  * Exposes basic functions for serializing event classes.
@@ -34,7 +34,7 @@ trait SerializableEventTrait
     /**
      * Returns an array with the basic variables that should be json serialized.
      *
-     * @return void
+     * @return array
      */
     protected function basicSerialize()
     {

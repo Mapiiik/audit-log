@@ -1,13 +1,13 @@
 <?php
 
-namespace AuditStash\Model\Behavior;
+namespace AuditLog\Model\Behavior;
 
 use ArrayObject;
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Event\AuditUpdateEvent;
-use AuditStash\Persister\ElasticSearchPersister;
-use AuditStash\PersisterInterface;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Event\AuditUpdateEvent;
+use AuditLog\Persister\ElasticSearchPersister;
+use AuditLog\PersisterInterface;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
@@ -242,7 +242,7 @@ class AuditLogBehavior extends Behavior
             return;
         }
 
-        $data = $this->_table->dispatchEvent('AuditStash.beforeLog', ['logs' => $events]);
+        $data = $this->_table->dispatchEvent('AuditLog.beforeLog', ['logs' => $events]);
         $this->persister()->logEvents($data->getData('logs'));
 
         // stop duplicate records adding to audit_logs table, when saveMany() is called
@@ -309,7 +309,7 @@ class AuditLogBehavior extends Behavior
     public function persister(PersisterInterface $persister = null)
     {
         if ($persister === null && $this->persister === null) {
-            $class = Configure::read('AuditStash.persister') ?: ElasticSearchPersister::class;
+            $class = Configure::read('AuditLog.persister') ?: ElasticSearchPersister::class;
             $index = $this->getConfig('index') ?: $this->_table->getTable();
             $type = $this->getConfig('type') ?: Inflector::singularize($index);
 
@@ -346,7 +346,7 @@ class AuditLogBehavior extends Behavior
      */
     private function setCommonConfig()
     {
-        $commonBlacklist = Configure::read('AuditStash.blacklist') ?? null;
+        $commonBlacklist = Configure::read('AuditLog.blacklist') ?? null;
         if (isset($commonBlacklist)) {
             $this->setConfig('blacklist', $commonBlacklist);
         }

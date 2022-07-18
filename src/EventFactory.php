@@ -1,10 +1,10 @@
 <?php
 
-namespace AuditStash;
+namespace AuditLog;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Event\AuditUpdateEvent;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Event\AuditUpdateEvent;
 use ReflectionObject;
 
 /**
@@ -15,10 +15,10 @@ class EventFactory
 {
     /**
      * Converts an array of data as comming from elastic search and
-     * converts it into an AuditStash\EventInterface object.
+     * converts it into an AuditLog\EventInterface object.
      *
      * @param array $data The array data from elastic search
-     * @return AuditStash\EventInterface
+     * @return AuditLog\EventInterface
      */
     public function create(array $data)
     {

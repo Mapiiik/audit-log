@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Shell;
+namespace AuditLog\Shell;
 
 use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;

@@ -1,10 +1,10 @@
 <?php
 
-namespace AuditStash\Test\Persister;
+namespace AuditLog\Test\Persister;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Persister\RabbitMQPersister;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Persister\RabbitMQPersister;
 use Cake\TestSuite\TestCase;
 use ProcessMQ\Connection\RabbitMQConnection;
 

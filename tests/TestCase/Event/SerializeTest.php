@@ -1,11 +1,11 @@
 <?php
 
-namespace AuditStash\Test\Event;
+namespace AuditLog\Test\Event;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Event\AuditUpdateEvent;
-use AuditStash\EventFactory;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Event\AuditUpdateEvent;
+use AuditLog\EventFactory;
 use Cake\TestSuite\TestCase;
 
 class SerializeTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Event;
+namespace AuditLog\Event;
 
 use Datetime;
 

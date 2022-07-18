@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Error\Debugger;

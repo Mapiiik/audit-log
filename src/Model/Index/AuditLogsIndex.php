@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Model\Index;
+namespace AuditLog\Model\Index;
 
 use Cake\ElasticSearch\Index;
 use Elastica\Aggregation\Terms as TermsAggregation;

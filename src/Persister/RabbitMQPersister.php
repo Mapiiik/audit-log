@@ -1,8 +1,8 @@
 <?php
 
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
-use AuditStash\PersisterInterface;
+use AuditLog\PersisterInterface;
 use Cake\Datasource\ConnectionManager;
 
 /**

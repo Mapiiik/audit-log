@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Shell\Task;
+namespace AuditLog\Shell\Task;
 
 use Cake\Console\Shell;
 use Cake\Datasource\ConnectionManager;

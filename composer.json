@@ -1,6 +1,6 @@
 {
-    "name": "kdesilva/audit-trail",
-    "description": "Flexible and rock solid audit log tracking plugin for cakephp",
+    "name": "mapik/audit-log",
+    "description": "Flexible and rock solid audit log tracking plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
     "require": {
@@ -15,18 +15,18 @@
         "cakephp/cakephp-codesniffer": "^4.0.0"
     },
     "suggest": {
-        "cakephp/elastic-search": "The default persister engine for audit-stash is elastic search and requires this plugin",
+        "cakephp/elastic-search": "The optional persister engine for audit-log is elastic search and requires this plugin",
         "friendsofcake/process-mq": "Use this package if you prefer sending the audit events to RabbitMQ",
-        "friendsofcake/crud": "audit-stash provide Crud Action classes for displaying audit logs"
+        "friendsofcake/crud": "audit-log provide Crud Action classes for displaying audit logs"
     },
     "autoload": {
         "psr-4": {
-            "AuditStash\\": "src"
+            "AuditLog\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AuditStash\\Test\\": "tests",
+            "AuditLog\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }

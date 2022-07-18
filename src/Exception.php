@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash;
+namespace AuditLog;
 
 /**
  * A base exception for the package

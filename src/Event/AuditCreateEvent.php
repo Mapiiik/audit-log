@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Event;
+namespace AuditLog\Event;
 
 /**
  * Represents an audit log event for a newly created record.

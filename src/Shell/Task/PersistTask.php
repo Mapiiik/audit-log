@@ -1,10 +1,10 @@
 <?php
 
-namespace AuditStash\Shell\Task;
+namespace AuditLog\Shell\Task;
 
-use AuditStash\EventFactory;
-use AuditStash\Persister\ElasticSearchPersister;
-use AuditStash\PersisterInterface;
+use AuditLog\EventFactory;
+use AuditLog\Persister\ElasticSearchPersister;
+use AuditLog\PersisterInterface;
 use Cake\Console\Shell;
 
 /**

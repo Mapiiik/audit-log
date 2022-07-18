@@ -1,9 +1,9 @@
 <?php
 
-namespace AuditStash\Test\Persister;
+namespace AuditLog\Test\Persister;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Persister\TablePersister;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Persister\TablePersister;
 use Cake\Datasource\EntityInterface;
 use Cake\Error\Debugger;
 use Cake\ORM\Entity;
@@ -41,7 +41,7 @@ class TablePersisterTest extends TestCase
     /**
      * Test subject
      *
-     * @var \AuditStash\Persister\TablePersister
+     * @var \AuditLog\Persister\TablePersister
      */
     public $TablePersister;
 
@@ -333,7 +333,7 @@ class TablePersisterTest extends TestCase
             ->expects($this->once())
             ->method('log')
             ->with(
-                '[AuditStash\Persister\TablePersister] Persisting audit log failed. Data:' . PHP_EOL .
+                '[AuditLog\Persister\TablePersister] Persisting audit log failed. Data:' . PHP_EOL .
                 Debugger::exportVar($logged, 4)
             );
 

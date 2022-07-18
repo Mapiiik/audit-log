@@ -1,9 +1,9 @@
 <?php
 
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
-use AuditStash\Event\BaseEvent;
-use AuditStash\EventInterface;
+use AuditLog\Event\BaseEvent;
+use AuditLog\EventInterface;
 use Cake\Database\Type;
 use Cake\Database\Type\DateTimeType;
 use Cake\Utility\Hash;
@@ -13,7 +13,7 @@ trait ExtractionTrait
     /**
      * Extracts the basic fields from the audit event object.
      *
-     * @param \AuditStash\EventInterface $event The event object from which to extract the fields.
+     * @param \AuditLog\EventInterface $event The event object from which to extract the fields.
      * @param bool $serialize Whether to serialize fields that are expected to hold array data.
      * @return array
      */
@@ -51,7 +51,7 @@ trait ExtractionTrait
     /**
      * Extracts the primary key fields from the audit event object.
      *
-     * @param \AuditStash\EventInterface $event The event object from which to extract the primary key.
+     * @param \AuditLog\EventInterface $event The event object from which to extract the primary key.
      * @param string $strategy The strategy to use for extracting the primary key.
      * @return array
      */
@@ -97,7 +97,7 @@ trait ExtractionTrait
     /**
      * Extracts the metadata fields from the audit event object.
      *
-     * @param \AuditStash\EventInterface $event The event object from which to extract the metadata fields.
+     * @param \AuditLog\EventInterface $event The event object from which to extract the metadata fields.
      * @param array|bool $fields Which/whether meta data fields should be extracted.
      * @param bool $unsetExtracted Whether the fields extracted from the meta data should be unset.
      * @param bool $serialize Whether to serialize fields that are expected to hold array data.

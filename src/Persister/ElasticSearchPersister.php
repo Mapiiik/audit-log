@@ -1,9 +1,9 @@
 <?php
 
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
-use AuditStash\Exception;
-use AuditStash\PersisterInterface;
+use AuditLog\Exception;
+use AuditLog\PersisterInterface;
 use Cake\Datasource\ConnectionManager;
 use Cake\ElasticSearch\Datasource\Connection;
 use Elastica\Document;

@@ -1,10 +1,10 @@
 <?php
 
-namespace AuditStash\Test\Model\Behavior;
+namespace AuditLog\Test\Model\Behavior;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditUpdateEvent;
-use AuditStash\Model\Behavior\AuditLogBehavior;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditUpdateEvent;
+use AuditLog\Model\Behavior\AuditLogBehavior;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;

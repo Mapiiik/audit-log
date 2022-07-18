@@ -1,6 +1,6 @@
 <?php
 
-namespace AuditStash\Model\Document;
+namespace AuditLog\Model\Document;
 
 use Cake\ElasticSearch\Document;
 

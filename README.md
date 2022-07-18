@@ -1,4 +1,4 @@
-# AuditStash Plugin For CakePHP 4.x
+# AuditLog Plugin For CakePHP 4.x
 
 This plugin is forked from [lorenzo/audit-stash](https://github.com/lorenzo/audit-stash)
 
@@ -28,7 +28,7 @@ following lines in the root of your application.
 
 ```
 composer require kdesilva/audit-trail
-bin/cake plugin load AuditStash
+bin/cake plugin load AuditLog
 ```
 
 If you plan to use ElasticSearch as the storage engine, please refer to [lorenzo/audit-stash](https://github.com/lorenzo/audit-stash)
@@ -40,12 +40,12 @@ If you plan to use ElasticSearch as the storage engine, please refer to [lorenzo
 If you want to use a regular database, respectively an engine that can be used via the CakePHP ORM API, then you can use
 the table persister that ships with this plugin.
 
-To do so you need to configure the `AuditStash.persister` option accordingly. In your `config/app.php` file add the
+To do so you need to configure the `AuditLog.persister` option accordingly. In your `config/app.php` file add the
 following configuration:
 
 ```php
-'AuditStash' => [
-    'persister' => 'AuditStash\Persister\TablePersister'
+'AuditLog' => [
+    'persister' => 'AuditLog\Persister\TablePersister'
 ]
 ```
 
@@ -59,7 +59,7 @@ can migrate the corresponding table class.
 If you use the plugin's default migration, you can create the table and model class using the commands below.
 
 ```
-bin/cake migrations migrate -p AuditStash -t 20171018185609
+bin/cake migrations migrate -p AuditLog -t 20171018185609
 bin/cake bake model AuditLogs
 ```
 
@@ -70,7 +70,7 @@ The table persister supports various configuration options, please refer to
 applied via its `config()` (or `setConfig()`) method:
 
 ```php
-$this->addBehavior('AuditStash.AuditLog');
+$this->addBehavior('AuditLog.AuditLog');
 $this->behaviors()->get('AuditLog')->persister()->config([
     'extractMetaFields' => [
         'user.name' => 'username'
@@ -82,8 +82,8 @@ Also, you can set some common config via the `app.php`. Currently, the plugin su
 
 ```php
 ...
-'AuditStash' => [
-    'persister' => 'AuditStash\Persister\TablePersister',
+'AuditLog' => [
+    'persister' => 'AuditLog\Persister\TablePersister',
     'extractMetaFields' => [
             'user.username' => 'username',
             'user.customer_id' => 'customer_id',
@@ -92,7 +92,7 @@ Also, you can set some common config via the `app.php`. Currently, the plugin su
 ],
 ```
 
-## Using AuditStash
+## Using AuditLog
 
 Enabling the Audit Log in any of your table classes is as simple as adding a behavior in the `initialize()` function:
 
@@ -103,7 +103,7 @@ class ArticlesTable extends Table
     {
         $this->setDisplayField('article_name');
         ...
-        $this->addBehavior('AuditStash.AuditLog');
+        $this->addBehavior('AuditLog.AuditLog');
     }
 }
 ```
@@ -119,7 +119,7 @@ class ArticlesTable extends Table
     {
         $this->setDisplayField('article_name');
         ...
-        $this->addBehavior('AuditStash.AuditLog', [
+        $this->addBehavior('AuditLog.AuditLog', [
             'blacklist' => ['created', 'modified', 'another_field_name']
         ]);
     }
@@ -136,7 +136,7 @@ class ArticlesTable extends Table
     {
         $this->setDisplayField('article_name');
         ...
-        $this->addBehavior('AuditStash.AuditLog', [
+        $this->addBehavior('AuditLog.AuditLog', [
             'whitelist' => ['title', 'description', 'author_id']
         ]);
     }
@@ -150,7 +150,7 @@ public function initialize(array $config = [])
 {
     $this->setDisplayField('article_name');
     ...
-    $this->addBehavior('AuditStash.AuditLog', [
+    $this->addBehavior('AuditLog.AuditLog', [
         'blacklist' => ['customer_id', 'product_id'],
         'foreignKeys' => [
             'Categories' => 'name', // foreign key Model => human-friendly field name
@@ -168,12 +168,12 @@ Therefore, you need to set `unsetAssociatedEntityFieldsNotDirtyByFieldName` as y
 
 ### Storing The Logged In User
 
-It is often useful to store the identifier of the user that is triggering the changes in a certain table. For this purpose, `AuditStash`
+It is often useful to store the identifier of the user that is triggering the changes in a certain table. For this purpose, `AuditLog`
 provides the `RequestMetadata` listener class, that is capable of storing the current URL, IP and logged in user. You need to add this
 listener to your application in the `AppController::beforeFilter()` method:
 
 ```php
-use AuditStash\Meta\RequestMetadata;
+use AuditLog\Meta\RequestMetadata;
 ...
 
 class AppController extends Controller
@@ -201,7 +201,7 @@ globally:
 
 
 ```php
-use AuditStash\Meta\RequestMetadata;
+use AuditLog\Meta\RequestMetadata;
 use Cake\Event\EventManager;
 ...
 
@@ -225,14 +225,14 @@ class AppController extends Controller
 
 ### Storing Extra Information In Logs
 
-`AuditStash` is also capable of storing arbitrary data for each of the logged events. You can use the `ApplicationMetadata` listener or
+`AuditLog` is also capable of storing arbitrary data for each of the logged events. You can use the `ApplicationMetadata` listener or
 create your own. If you choose to use `ApplicationMetadata`, your logs will contain the `app_name` key stored and any extra information
 your may have provided. You can configure this listener anywhere in your application, such as the `bootstrap.php` file or, again, directly
 in your AppController.
 
 
 ```php
-use AuditStash\Meta\ApplicationMetadata;
+use AuditLog\Meta\ApplicationMetadata;
 use Cake\Event\EventManager;
 
 EventManager::instance()->on(new ApplicationMetadata('my_blog_app', [
@@ -243,10 +243,10 @@ EventManager::instance()->on(new ApplicationMetadata('my_blog_app', [
 
 ```
 
-Implementing your own metadata listeners is as simple as attaching the listener to the `AuditStash.beforeLog` event. For example:
+Implementing your own metadata listeners is as simple as attaching the listener to the `AuditLog.beforeLog` event. For example:
 
 ```php
-EventManager::instance()->on('AuditStash.beforeLog', function ($event, array $logs) {
+EventManager::instance()->on('AuditLog.beforeLog', function ($event, array $logs) {
     foreach ($logs as $log) {
         $log->setMetaInfo($log->getMetaInfo() + ['extra' => 'This is extra data to be stored']);
     }
@@ -259,7 +259,7 @@ There are valid reasons for wanting to use a different persist engine for your a
 your own storage engines. It is as simple as implementing the `PersisterInterface` interface:
 
 ```php
-use AuditStash\PersisterInterface;
+use AuditLog\PersisterInterface;
 
 class MyPersister implements PersisterInterface
 {
@@ -286,11 +286,11 @@ class MyPersister implements PersisterInterface
 }
 ```
 
-Finally, you need to configure `AuditStash` to use your new persister. In the `config/app.php` file add the following
+Finally, you need to configure `AuditLog` to use your new persister. In the `config/app.php` file add the following
 lines:
 
 ```php
-'AuditStash' => [
+'AuditLog' => [
     'persister' => 'App\Namespace\For\Your\Persister'
 ]
 ```
@@ -298,7 +298,7 @@ lines:
 or if you are using as standalone via
 
 ```php
-\Cake\Core\Configure::write('AuditStash.persister', 'App\Namespace\For\Your\DatabasePersister');
+\Cake\Core\Configure::write('AuditLog.persister', 'App\Namespace\For\Your\DatabasePersister');
 ```
 
 The configuration contains the fully namespaced class name of your persister.

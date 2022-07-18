@@ -1,7 +1,7 @@
 <?php
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
-use AuditStash\PersisterInterface;
+use AuditLog\PersisterInterface;
 use Cake\Datasource\ModelAwareTrait;
 use DateTime;
 
@@ -12,7 +12,7 @@ use DateTime;
  *
  * @package App\Persister
  * @author Cake Development Corporation
- * @deprecated Use \AuditStash\Persister\TablePersister instead.
+ * @deprecated Use \AuditLog\Persister\TablePersister instead.
  */
 class DatabasePersister implements PersisterInterface
 {

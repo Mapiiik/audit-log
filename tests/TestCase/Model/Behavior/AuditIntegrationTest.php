@@ -1,12 +1,12 @@
 <?php
 
-namespace AuditStash\Test\Model\Behavior;
+namespace AuditLog\Test\Model\Behavior;
 
-use AuditStash\Event\AuditCreateEvent;
-use AuditStash\Event\AuditDeleteEvent;
-use AuditStash\Event\AuditUpdateEvent;
-use AuditStash\Model\Behavior\AuditLogBehavior;
-use AuditStash\PersisterInterface;
+use AuditLog\Event\AuditCreateEvent;
+use AuditLog\Event\AuditDeleteEvent;
+use AuditLog\Event\AuditUpdateEvent;
+use AuditLog\Model\Behavior\AuditLogBehavior;
+use AuditLog\PersisterInterface;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
