@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Model\Behavior;
 
@@ -10,7 +11,7 @@ use AuditLog\Persister\ElasticSearchPersister;
 use AuditLog\PersisterInterface;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Inflector;
@@ -28,7 +29,7 @@ class AuditLogBehavior extends Behavior
     /**
      * Default configuration.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'index' => null,
@@ -42,14 +43,14 @@ class AuditLogBehavior extends Behavior
     /**
      * The persister object.
      *
-     * @var PersisterInterface
+     * @var \AuditLog\PersisterInterface
      */
     protected $persister;
 
     /**
      * Returns the list of implemented events.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
@@ -59,7 +60,7 @@ class AuditLogBehavior extends Behavior
             'Model.afterSave' => 'afterSave',
             'Model.afterDelete' => 'afterDelete',
             'Model.afterSaveCommit' => 'afterCommit',
-            'Model.afterDeleteCommit' => 'afterCommit'
+            'Model.afterDeleteCommit' => 'afterCommit',
         ];
     }
 
@@ -67,12 +68,12 @@ class AuditLogBehavior extends Behavior
      * Conditionally adds the `_auditTransaction` and `_auditQueue` keys to $options. They are
      * used to track all changes done inside the same transaction.
      *
-     * @param Cake\Event\Event The Model event that is enclosed inside a transaction
-     * @param Cake\Datasource\EntityInterface $entity The entity that is to be saved
-     * @param ArrayObject $options The options to be passed to the save or delete operation
+     * @param \Cake\Event\EventInterface $event The Model event that is enclosed inside a transaction
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is to be saved
+     * @param \ArrayObject $options The options to be passed to the save or delete operation
      * @return void
      */
-    public function injectTracking(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function injectTracking(EventInterface $event, EntityInterface $entity, ArrayObject $options)
     {
         if (!isset($options['_auditTransaction'])) {
             $options['_auditTransaction'] = Text::uuid();
@@ -87,14 +88,13 @@ class AuditLogBehavior extends Behavior
      * Calculates the changes done to the entity and stores the audit log event object into the
      * log queue inside the `_auditQueue` key in $options.
      *
-     * @param Cake\Event\Event The Model event that is enclosed inside a transaction
-     * @param Cake\Datasource\EntityInterface $entity The entity that is to be saved
-     * @param ArrayObject $options Options array containing the `_auditQueue` key
+     * @param \Cake\Event\EventInterface $event The Model event that is enclosed inside a transaction
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is to be saved
+     * @param \ArrayObject $options Options array containing the `_auditQueue` key
      * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity, $options)
+    public function afterSave(EventInterface $event, EntityInterface $entity, $options)
     {
-
         if (!isset($options['_auditQueue'])) {
             return;
         }
@@ -113,7 +113,7 @@ class AuditLogBehavior extends Behavior
         $config['whitelist'] = array_diff($config['whitelist'], $config['blacklist']);
         $changed = $entity->extract($config['whitelist'], true);
 
-        if (!$changed) {
+        if (empty($changed)) {
             return;
         }
 
@@ -122,16 +122,20 @@ class AuditLogBehavior extends Behavior
 
         // get required associated data
         foreach ($properties as $property) {
-            if (in_array($property, array_keys($original)) && count($original[$property]) > 0
-                && $original[$property][0] instanceof \Cake\ORM\Entity) { // i.e. associted properies
+            if (
+                in_array($property, array_keys($original)) && count($original[$property]) > 0
+                && $original[$property][0] instanceof \Cake\ORM\Entity
+            ) { // i.e. associted properies
                 foreach ($original[$property] as $associatedKey => $associatedRow) {
-
                     if (!$associatedRow->isDirty()) {
                         $fieldToCompare = $config['unsetAssociatedEntityFieldsNotDirtyByFieldName'][$property] ?? null;
                         if (isset($fieldToCompare)) {
                             foreach ($changed[$property] as $changedAssociatedKey => $changedAssociatedRow) {
                                 if ($associatedRow->{$fieldToCompare} == $changedAssociatedRow->{$fieldToCompare}) {
-                                    unset($original[$property][$associatedKey], $changed[$property][$changedAssociatedKey]);
+                                    unset(
+                                        $original[$property][$associatedKey],
+                                        $changed[$property][$changedAssociatedKey]
+                                    );
                                     break;
                                 }
                             }
@@ -143,7 +147,8 @@ class AuditLogBehavior extends Behavior
                          */
                         $associatedDirtyFields = $associatedRow->getDirty();
                         foreach ($associatedDirtyFields as $associatedDirtyField) {
-                            $original[$property][$associatedKey]->{$associatedDirtyField} = $associatedRow->getOriginal($associatedDirtyField);
+                            $original[$property][$associatedKey]
+                                ->{$associatedDirtyField} = $associatedRow->getOriginal($associatedDirtyField);
                         }
                     }
                 }
@@ -173,8 +178,8 @@ class AuditLogBehavior extends Behavior
             }
         }
 
-        // now check $changed is empty or equals to $original, if not new
-        if (!$changed || ($original === $changed && !$entity->isNew())) {
+        // now check $changed equals to $original, if not new
+        if ($original === $changed && !$entity->isNew()) {
             return;
         }
 
@@ -221,12 +226,12 @@ class AuditLogBehavior extends Behavior
     /**
      * Persists all audit log events stored in the `_eventQueue` key inside $options.
      *
-     * @param Cake\Event\Event The Model event that is enclosed inside a transaction
-     * @param Cake\Datasource\EntityInterface $entity The entity that is to be saved or deleted
-     * @param ArrayObject $options Options array containing the `_auditQueue` key
+     * @param \Cake\Event\EventInterface $event The Model event that is enclosed inside a transaction
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is to be saved or deleted
+     * @param \ArrayObject $options Options array containing the `_auditQueue` key
      * @return void
      */
-    public function afterCommit(Event $event, EntityInterface $entity, $options)
+    public function afterCommit(EventInterface $event, EntityInterface $entity, $options)
     {
         if (!isset($options['_auditQueue']) || $options['_auditQueue']->count() == 0) {
             return;
@@ -246,10 +251,8 @@ class AuditLogBehavior extends Behavior
         $this->persister()->logEvents($data->getData('logs'));
 
         // stop duplicate records adding to audit_logs table, when saveMany() is called
-        /**
-         * @var SplObjectStorage $attachedAuditQueueEntities
-         */
         $options['_auditQueue']->rewind();
+
         while ($options['_auditQueue']->valid()) {
             $obj = $options['_auditQueue']->current();
             $options['_auditQueue']->next();
@@ -260,12 +263,12 @@ class AuditLogBehavior extends Behavior
     /**
      * Persists all audit log events stored in the `_eventQueue` key inside $options.
      *
-     * @param Cake\Event\Event The Model event that is enclosed inside a transaction
-     * @param Cake\Datasource\EntityInterface $entity The entity that is to be saved or deleted
-     * @param ArrayObject $options Options array containing the `_auditQueue` key
+     * @param \Cake\Event\EventInterface $event The Model event that is enclosed inside a transaction
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is to be saved or deleted
+     * @param \ArrayObject $options Options array containing the `_auditQueue` key
      * @return void
      */
-    public function afterDelete(Event $event, EntityInterface $entity, $options)
+    public function afterDelete(EventInterface $event, EntityInterface $entity, $options)
     {
         if (!isset($options['_auditQueue'])) {
             return;
@@ -291,10 +294,12 @@ class AuditLogBehavior extends Behavior
             $transaction,
             $primary,
             $this->_table->getTable(),
-            $parent,
+            [],
             $original,
             $displayValue
         );
+
+        $auditEvent->setParentSourceName($parent);
 
         $options['_auditQueue']->attach($entity, $auditEvent);
     }
@@ -303,10 +308,10 @@ class AuditLogBehavior extends Behavior
      * Sets the persister object to use for logging all audit events.
      * If called with no arguments, it will return the currently configured persister.
      *
-     * @param PersisterInterface $persister The persister object to use
-     * @return PersisterInterface The configured persister
+     * @param \AuditLog\PersisterInterface $persister The persister object to use
+     * @return \AuditLog\PersisterInterface The configured persister
      */
-    public function persister(PersisterInterface $persister = null)
+    public function persister(?PersisterInterface $persister = null)
     {
         if ($persister === null && $this->persister === null) {
             $class = Configure::read('AuditLog.persister') ?: ElasticSearchPersister::class;
