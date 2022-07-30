@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog;
 
@@ -7,5 +8,4 @@ namespace AuditLog;
  */
 class Exception extends \Exception
 {
-
 }

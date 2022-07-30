@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog;
 
@@ -11,7 +12,7 @@ interface PersisterInterface
     /**
      * Persists each of the passed EventInterface objects.
      *
-     * @param array $auditLogs List of EventInterface objects to persist
+     * @param \AuditLog\EventInterface[] $auditLogs List of EventInterface objects to persist
      * @return void
      */
     public function logEvents(array $auditLogs);

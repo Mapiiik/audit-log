@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace AuditLog;
 
 use JsonSerializable;
@@ -19,9 +21,9 @@ interface EventInterface extends JsonSerializable, Serializable
     /**
      * Returns the global transaction id in which this event is contained.
      *
-     * @return string
+     * @return mixed
      */
-    public function getTransactionId(): string;
+    public function getTransactionId();
 
     /**
      * Returns the id of the entity that was created or altered.
@@ -36,6 +38,13 @@ interface EventInterface extends JsonSerializable, Serializable
      * @return string
      */
     public function getSourceName(): string;
+
+    /**
+     * Returns the repository name that triggered this event.
+     *
+     * @return string|null
+     */
+    public function getParentSourceName(): ?string;
 
     /**
      * Returns the time string in which this change happened.
@@ -63,7 +72,7 @@ interface EventInterface extends JsonSerializable, Serializable
      * Returns the display field value.
      * The display field is set via the Model.setDisplayField($fieldName) property
      *
-     * @return string
+     * @return string|null
      */
-    public function getDisplayValue(): string;
+    public function getDisplayValue(): ?string;
 }

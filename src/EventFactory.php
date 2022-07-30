@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog;
 
@@ -18,7 +19,7 @@ class EventFactory
      * converts it into an AuditLog\EventInterface object.
      *
      * @param array $data The array data from elastic search
-     * @return AuditLog\EventInterface
+     * @return \AuditLog\EventInterface
      */
     public function create(array $data)
     {
@@ -28,21 +29,14 @@ class EventFactory
             'delete' => AuditDeleteEvent::class,
         ];
 
-        if ($data['type'] !== 'delete') {
-            $event = new $map[$data['type']](
-                $data['transaction'],
-                $data['primary_key'],
-                $data['source'],
-                $data['changed'],
-                $data['original']
-            );
-        } else {
-            $event = new $map[$data['type']](
-                $data['transaction'],
-                $data['primary_key'],
-                $data['source']
-            );
-        }
+        $event = new $map[$data['type']](
+            $data['transaction'],
+            $data['primary_key'],
+            $data['source'],
+            $data['type'] === 'delete' ? [] : $data['changed'],
+            $data['original'],
+            $data['display_value']
+        );
 
         if (isset($data['parent_source'])) {
             $event->setParentSourceName($data['parent_source']);
