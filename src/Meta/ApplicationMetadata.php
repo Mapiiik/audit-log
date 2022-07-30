@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Meta;
 
@@ -21,6 +22,7 @@ class ApplicationMetadata implements EventListenerInterface
     /**
      * Constructor.
      *
+     * @param string $name Application name
      * @param array $data The extra application data to be copied to
      * each audit log event.
      */
@@ -32,7 +34,7 @@ class ApplicationMetadata implements EventListenerInterface
     /**
      * Returns an array with the events this class listens to.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
@@ -43,7 +45,7 @@ class ApplicationMetadata implements EventListenerInterface
      * Enriches all of the passed audit logs to add the request
      * info metadata.
      *
-     * @param Event The AuditLog.beforeLog event
+     * @param \Cake\Event\Event $event The AuditLog.beforeLog event
      * @param array $logs The audit log event objects
      * @return void
      */

@@ -1,10 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Meta;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Http\ServerRequest as Request;
 
 /**
  * Event listener that is capable of enriching the audit logs
@@ -15,7 +15,7 @@ class RequestMetadata implements EventListenerInterface
     /**
      * The current request.
      *
-     * @var Request
+     * @var \Cake\Http\ServerRequest
      */
     protected $request;
 
@@ -29,7 +29,7 @@ class RequestMetadata implements EventListenerInterface
     /**
      * Constructor.
      *
-     * @param Request $request The current request
+     * @param \Cake\Http\ServerRequest $request The current request
      * @param string|int $user The current user id or username
      */
     public function __construct($request, $user = null)
@@ -41,7 +41,7 @@ class RequestMetadata implements EventListenerInterface
     /**
      * Returns an array with the events this class listens to.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
@@ -52,7 +52,7 @@ class RequestMetadata implements EventListenerInterface
      * Enriches all of the passed audit logs to add the request
      * info metadata.
      *
-     * @param Event The AuditLog.beforeLog event
+     * @param \Cake\Event\Event $event The AuditLog.beforeLog event
      * @param array $logs The audit log event objects
      * @return void
      */
@@ -61,7 +61,7 @@ class RequestMetadata implements EventListenerInterface
         $meta = [
             'ip' => $this->request->clientIp(),
             'url' => $this->request->getRequestTarget(),
-            'user' => $this->user
+            'user' => $this->user,
         ];
 
         foreach ($logs as $log) {
