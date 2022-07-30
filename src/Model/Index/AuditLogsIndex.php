@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Model\Index;
 
@@ -16,7 +17,7 @@ class AuditLogsIndex extends Index
      *
      * @return string
      */
-    public static function defaultConnectionName()
+    public static function defaultConnectionName(): string
     {
         return 'auditlog_elastic';
     }
@@ -24,8 +25,8 @@ class AuditLogsIndex extends Index
     /**
      * Returns a query setup for getting the 'type' aggregation.
      *
-     * @param Cake\ElasticSearch\Query $query The Query Object
-     * @return Cake\ElasticSearch\Query
+     * @param \Cake\ElasticSearch\Query $query The Query Object
+     * @return \Cake\ElasticSearch\Query
      */
     public function findTypes($query)
     {
@@ -33,6 +34,7 @@ class AuditLogsIndex extends Index
         $facet->setField('_type');
         $facet->setSize(200);
         $query->aggregate($facet);
+
         return $query->limit(1);
     }
 }
