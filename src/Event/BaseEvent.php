@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Event;
 
@@ -28,19 +29,24 @@ abstract class BaseEvent implements EventInterface
      */
     protected array $original;
 
-
     /**
      * Construnctor.
      *
-     * @param string $transactionId The global transaction id
+     * @param mixed $transactionId The global transaction id
      * @param mixed $id The entities primary key
      * @param string $source The name of the source (table)
      * @param array $changed The array of changes that got detected for the entity
      * @param array $original The original values the entity had before it got changed
      * @param string|null $displayValue Human friendly text for the record.
      */
-    public function __construct(string $transactionId, $id, string $source, array $changed, array $original, ?string $displayValue)
-    {
+    public function __construct(
+        $transactionId,
+        $id,
+        string $source,
+        array $changed,
+        array $original,
+        ?string $displayValue
+    ) {
         $this->transactionId = $transactionId;
         $this->id = $id;
         $this->source = $source;
@@ -80,13 +86,13 @@ abstract class BaseEvent implements EventInterface
     /**
      * Returns the array to be used for encoding this object as json.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->basicSerialize() + [
                 'original' => $this->original,
-                'changed' => $this->changed
+                'changed' => $this->changed,
             ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Event;
 
@@ -10,9 +11,9 @@ trait BaseEventTrait
     /**
      * Global transaction id.
      *
-     * @var string
+     * @var mixed
      */
-    protected string $transactionId;
+    protected $transactionId;
 
     /**
      * Entity primary key.
@@ -31,7 +32,7 @@ trait BaseEventTrait
     /**
      * Parent repository name.
      *
-     * @var string
+     * @var string|null
      */
     protected ?string $parentSource = null;
 
@@ -50,16 +51,16 @@ trait BaseEventTrait
     protected array $meta = [];
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected string $displayValue;
+    protected ?string $displayValue;
 
     /**
      * Returns the global transaction id in which this event is contained.
      *
-     * @return string
+     * @return mixed
      */
-    public function getTransactionId(): string
+    public function getTransactionId()
     {
         return $this->transactionId;
     }
@@ -74,6 +75,7 @@ trait BaseEventTrait
         if (is_array($this->id) && count($this->id) === 1) {
             return current($this->id);
         }
+
         return $this->id;
     }
 
@@ -90,7 +92,7 @@ trait BaseEventTrait
     /**
      * Returns the repository name that triggered this event.
      *
-     * @return string
+     * @return string|null
      */
     public function getParentSourceName(): ?string
     {
@@ -140,9 +142,9 @@ trait BaseEventTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDisplayValue(): string
+    public function getDisplayValue(): ?string
     {
         return $this->displayValue;
     }
