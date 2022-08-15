@@ -5,13 +5,10 @@
 /tags
 /composer.lock
 /phpunit.xml
+/logs
+/tmp
 /vendor
 *.mo
-
-# IDE and editor specific files #
-#################################
-/nbproject
-.idea
 
 # OS generated files #
 ######################
@@ -23,3 +20,28 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+.directory
+
+# Tool specific files #
+#######################
+# PHPUnit
+.phpunit.result.cache
+# vim
+*~
+*.swp
+*.swo
+# sublime text & textmate
+*.sublime-*
+*.stTheme.cache
+*.tmlanguage.cache
+*.tmPreferences.cache
+# Eclipse
+.settings/*
+# JetBrains, aka PHPStorm, IntelliJ IDEA
+.idea/*
+# NetBeans
+nbproject/*
+# Visual Studio Code
+.vscode
+# Sass preprocessor
+.sass-cache/
