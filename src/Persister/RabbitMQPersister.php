@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Persister;
 
@@ -13,7 +14,7 @@ class RabbitMQPersister implements PersisterInterface
     /**
      * The client or connection to RabbitMQ.
      *
-     * @var ProcessMQ\RabbitMQConnection;
+     * @var \ProcessMQ\Connection\RabbitMQConnection
      */
     protected $connection;
 
@@ -32,6 +33,7 @@ class RabbitMQPersister implements PersisterInterface
      * - exchange: The exchange name where to publish the messages
      * - routing: The raouting name to use inside the exchange
      *
+     * @param array $options Options for this persister.
      * @return void
      */
     public function __construct($options = [])
@@ -40,7 +42,7 @@ class RabbitMQPersister implements PersisterInterface
             'connection' => 'auditlog_rabbit',
             'delivery_mode' => 2,
             'exchange' => 'audits.persist',
-            'routing' => 'store'
+            'routing' => 'store',
         ];
         $this->options = $options;
     }
@@ -65,15 +67,18 @@ class RabbitMQPersister implements PersisterInterface
      * Sets the client connection to elastic search when passed.
      * If no arguments are provided, it returns the current connection.
      *
-     * @param ProcessMQ\RabbitMQConnection|null $connection The conneciton to elastic search
-     * @return ProcessMQ\RabbitMQConnection
+     * @param \ProcessMQ\Connection\RabbitMQConnection|null $connection The conneciton to elastic search
+     * @return \ProcessMQ\Connection\RabbitMQConnection
      */
     public function connection($connection = null)
     {
         if ($connection === null) {
             if ($this->connection === null) {
-                $this->connection = ConnectionManager::get($this->options['connection']);
+                /** @var \ProcessMQ\Connection\RabbitMQConnection $connection */
+                $connection = ConnectionManager::get($this->options['connection']);
+                $this->connection = $connection;
             }
+
             return $this->connection;
         }
 
