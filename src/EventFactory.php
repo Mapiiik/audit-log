@@ -33,7 +33,7 @@ class EventFactory
             $data['transaction'],
             $data['primary_key'],
             $data['source'],
-            $data['type'] === 'delete' ? [] : $data['changed'],
+            $data['changed'],
             $data['original'],
             $data['display_value']
         );

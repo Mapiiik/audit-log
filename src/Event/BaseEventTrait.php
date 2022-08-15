@@ -46,9 +46,9 @@ trait BaseEventTrait
     /**
      * Extra information to describe the event.
      *
-     * @var array
+     * @var array|null
      */
-    protected array $meta = [];
+    protected ?array $meta = null;
 
     /**
      * @var string|null
@@ -123,9 +123,9 @@ trait BaseEventTrait
     /**
      * Returns an array with meta information that can describe this event.
      *
-     * @return array
+     * @return array|null
      */
-    public function getMetaInfo(): array
+    public function getMetaInfo(): ?array
     {
         return $this->meta;
     }
@@ -133,10 +133,10 @@ trait BaseEventTrait
     /**
      * Sets the meta information that can describe this event.
      *
-     * @param array $meta The meta information to attach to the event
+     * @param array|null $meta The meta information to attach to the event
      * @return void
      */
-    public function setMetaInfo(array $meta)
+    public function setMetaInfo(?array $meta)
     {
         $this->meta = $meta;
     }
