@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    tmpfs:
+      - /app/logs:uid=1000,gid=1000
+      - /app/tmp:uid=1000,gid=1000
+      - /app/vendor:uid=1000,gid=1000,exec
+    volumes:
+      - ./:/app
+    working_dir: /app/
+    environment:
+      - DB_URL=postgres://postgres:postgres@postgres/test
+      - ELASTIC_URL=Cake\ElasticSearch\Datasource\Connection://elasticsearch:9200?driver=Cake\ElasticSearch\Datasource\Connection
+
+  elasticsearch:
+    image: "elasticsearch:7.17.4"
+    ports:
+      - 9200/tcp
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms500m -Xmx500m
+    healthcheck:
+      test: "curl -f http://127.0.0.1:9200/_cluster/health || exit 1"
+      interval: "10s"
+      timeout: "5s"
+      retries: 10
+      start_period: "30s"
+
+  postgres:
+    image: postgres
+    tmpfs:
+      - /var/lib/postgresql/data:exec
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test
+    ports:
+      - 5432/tcp
