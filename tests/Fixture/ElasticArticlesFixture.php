@@ -6,7 +6,6 @@ use Cake\ElasticSearch\TestSuite\TestFixture;
 
 class ElasticArticlesFixture extends TestFixture
 {
-
     public $connection = 'test_elastic';
 
     /**
@@ -14,7 +13,7 @@ class ElasticArticlesFixture extends TestFixture
      *
      * @var string
      */
-    public $table = 'article';
+    public $table = 'articles';
 
     /**
      * The mapping data.
@@ -37,7 +36,7 @@ class ElasticArticlesFixture extends TestFixture
                 'body' => ['type' => 'text'],
                 'published' => ['type' => 'text', 'index' => false],
                 'published_date' => ['type' => 'date'],
-            ]
+            ],
         ],
         'changed' => [
             'properties' => [
@@ -47,7 +46,7 @@ class ElasticArticlesFixture extends TestFixture
                 'body' => ['type' => 'text'],
                 'published' => ['type' => 'text', 'index' => false],
                 'published_date' => ['type' => 'date'],
-            ]
+            ],
         ],
     ];
 }
