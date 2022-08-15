@@ -52,7 +52,7 @@ class ApplicationMetadata implements EventListenerInterface
     public function beforeLog(Event $event, array $logs)
     {
         foreach ($logs as $log) {
-            $log->setMetaInfo($log->getMetaInfo() + $this->data);
+            $log->setMetaInfo(($log->getMetaInfo() ?? []) + $this->data);
         }
     }
 }

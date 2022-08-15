@@ -65,7 +65,7 @@ class RequestMetadata implements EventListenerInterface
         ];
 
         foreach ($logs as $log) {
-            $log->setMetaInfo($log->getMetaInfo() + $meta);
+            $log->setMetaInfo(($log->getMetaInfo() ?? []) + $meta);
         }
     }
 }
