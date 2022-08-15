@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Test\Persister;
 
@@ -28,11 +29,11 @@ class RabbitMQPersisterTest extends TestCase
             'title' => 'A new article',
             'body' => 'article body',
             'author_id' => 1,
-            'published' => 'Y'
+            'published' => 'Y',
         ];
 
-        $events[] = new AuditCreateEvent('1234', 50, 'articles', $data, $data);
-        $events[] = new AuditDeleteEvent('1234', 2, 'comments', 'articles');
+        $events[] = new AuditCreateEvent('1234', 50, 'articles', $data, null, 'A new article');
+        $events[] = new AuditDeleteEvent('1234', 2, 'comments', null, $data, 'A new article');
 
         $client->expects($this->once())
             ->method('send')
@@ -59,11 +60,11 @@ class RabbitMQPersisterTest extends TestCase
             'title' => 'A new article',
             'body' => 'article body',
             'author_id' => 1,
-            'published' => 'Y'
+            'published' => 'Y',
         ];
 
-        $events[] = new AuditCreateEvent('1234', 50, 'articles', $data, $data);
-        $events[] = new AuditDeleteEvent('1234', 2, 'comments', 'articles');
+        $events[] = new AuditCreateEvent('1234', 50, 'articles', $data, null, 'A new article');
+        $events[] = new AuditDeleteEvent('1234', 2, 'comments', null, $data, 'A new article');
 
         $client->expects($this->once())
             ->method('send')
