@@ -305,7 +305,7 @@ The configuration contains the fully namespaced class name of your persister.
 
 ### Working With Transactional Queries
 
-Occasionally, you may want to wrap a number of database changes in a transaction, so that it can be rolled back if one part of the process fails. In order to create audit logs during a transaction, some additional setup is required. First create the file `src/Model/Audit/AuditTrail.php` with the following:
+Occasionally, you may want to wrap a number of database changes in a transaction, so that it can be rolled back if one part of the process fails. In order to create audit logs during a transaction, some additional setup is required. First create the file `src/Model/Audit/AuditLog.php` with the following:
 
 ```php
 <?php
@@ -314,7 +314,7 @@ namespace App\Model\Audit;
 use Cake\Utility\Text;
 use SplObjectStorage;
 
-class AuditTrail
+class AuditLog
 {
     protected $_auditQueue;
     protected $_auditTransaction;
@@ -338,14 +338,14 @@ class AuditTrail
 Anywhere you wish to use `Connection::transactional()`, you will need to first include the following at the top of the file:
 
 ```php
-use App\Model\Audit\AuditTrail;
+use App\Model\Audit\AuditLog;
 use Cake\Event\Event;
 ```
 
 Your transaction should then look similar to this example of a BookmarksController:
 
 ```php
-$trail = new AuditTrail();
+$auditLog = new AuditLog();
 $success = $this->Bookmarks->connection()->transactional(function () use ($trail) {
     $bookmark = $this->Bookmarks->newEntity();
     $bookmark1->save($data1, $trail->toSaveOptions());
@@ -360,20 +360,20 @@ $success = $this->Bookmarks->connection()->transactional(function () use ($trail
 
 if ($success) {
     $event = new Event('Model.afterCommit', $this->Bookmarks);
-    $table->behaviors()->get('AuditLog')->afterCommit($event, $result, $auditTrail->toSaveOptions());
+    $table->behaviors()->get('AuditLog')->afterCommit($event, $result, $auditLog->toSaveOptions());
 }
 ```
 
 This will save all audit info for your objects, as well as audits for any associated data. Please note, `$result` must be an instance of an Object. Do not change the text "Model.afterCommit".
 
 ### Saving Multiple Entities
-Create the file `src/Model/Audit/AuditTrail.php` as shown in the above section
+Create the file `src/Model/Audit/AuditLog.php` as shown in the above section
 
 ```php
 ...
-$auditTrail = new AuditTrail();
+$auditLog = new AuditLog();
 
-if ($this->Bookmarks->saveMany($entities, $auditTrail->toSaveOptions())) {
+if ($this->Bookmarks->saveMany($entities, $auditLog->toSaveOptions())) {
     ...                   
 }
 ```
