@@ -44,7 +44,7 @@ class ElasticSearchPersisterTest extends TestCase
             'published' => 'Y',
         ];
 
-        $events[] = new AuditCreateEvent('1234', 50, 'articles', $data, $data, 'A new article');
+        $events[] = new AuditCreateEvent('1234', 50, 'articles', $data, null, 'A new article');
         $persister->logEvents($events);
         $client->getIndex('articles')->refresh();
 
