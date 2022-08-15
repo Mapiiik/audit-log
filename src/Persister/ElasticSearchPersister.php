@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Persister;
 
@@ -16,7 +17,7 @@ class ElasticSearchPersister implements PersisterInterface
     /**
      * The client or connection to Elasticsearch.
      *
-     * @var Cake\ElasticSearch\Datasource\Connection
+     * @var \Cake\ElasticSearch\Datasource\Connection
      */
     protected $connection;
 
@@ -49,6 +50,7 @@ class ElasticSearchPersister implements PersisterInterface
      * - index: The Elasticsearch index to store documents
      * - type: The Elasticsearch mapping type of documents
      *
+     * @param array $options Options for this persister.
      * @return void
      */
     public function __construct($options = [])
@@ -80,7 +82,7 @@ class ElasticSearchPersister implements PersisterInterface
      */
     public function logEvents(array $auditLogs)
     {
-        $client = $this->getConnection();
+        $client = $this->getConnection()->getDriver();
         $documents = $this->transformToDocuments($auditLogs);
 
         $client->addDocuments($documents);
@@ -90,7 +92,7 @@ class ElasticSearchPersister implements PersisterInterface
      * Transforms the EventInterface objects to Elastica Documents.
      *
      * @param array $auditLogs An array of EventInterface objects.
-     * @return array
+     * @return \Elastica\Document[]
      */
     protected function transformToDocuments($auditLogs)
     {
@@ -108,12 +110,12 @@ class ElasticSearchPersister implements PersisterInterface
                 'primary_key' => $primary,
                 'source' => $log->getSourceName(),
                 'parent_source' => $log->getParentSourceName(),
-                'original' => $eventType === 'delete' ? null : $log->getOriginal(),
-                'changed' => $eventType === 'delete' ? null : $log->getChanged(),
-                'meta' => $log->getMetaInfo()
+                'original' => $log->getOriginal(),
+                'changed' => $log->getChanged(),
+                'meta' => $log->getMetaInfo(),
             ];
             $id = $this->useTransactionId ? $log->getTransactionId() : '';
-            $documents[] = new Document($id, $data, $type, $index);
+            $documents[] = new Document($id, $data, $index);
         }
 
         return $documents;
@@ -135,7 +137,7 @@ class ElasticSearchPersister implements PersisterInterface
     /**
      * Sets the client connection to elastic search.
      *
-     * @param Elastica\Client $connection The conneciton to elastic search
+     * @param \Cake\ElasticSearch\Datasource\Connection $connection The conneciton to elastic search
      * @return $this
      */
     public function setConnection(Connection $connection)
@@ -150,32 +152,17 @@ class ElasticSearchPersister implements PersisterInterface
      *
      * If connection is not defined, create a new one.
      *
-     * @return Elastica\Client
+     * @return \Cake\ElasticSearch\Datasource\Connection
      */
     public function getConnection()
     {
         if ($this->connection === null) {
-            $this->connection = ConnectionManager::get('auditlog_elastic');
+            /** @var \Cake\ElasticSearch\Datasource\Connection $connection*/
+            $connection = ConnectionManager::get('auditlog_elastic');
+            $this->connection = $connection;
         }
 
         return $this->connection;
-    }
-
-    /**
-     * Sets the client connection to elastic search when passed.
-     * If no arguments are provided, it returns the current connection.
-     *
-     * @deprecated Use getConnection()/setConnection() instead
-     * @param Elastica\Client $connection The conneciton to elastic search
-     * @return Elastica\Client
-     */
-    public function connection(Client $connection = null)
-    {
-        if ($connection !== null) {
-            return $this->setConnection($connection);
-        }
-
-        return $this->getConnection();
     }
 
     /**
