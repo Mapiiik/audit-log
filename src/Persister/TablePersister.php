@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Persister;
 
@@ -23,28 +24,28 @@ class TablePersister implements PersisterInterface
      *
      * @var string
      */
-    const STRATEGY_AUTOMATIC = 'automatic';
+    public const STRATEGY_AUTOMATIC = 'automatic';
 
     /**
      * Strategy that extracts data as separate fields/properties.
      *
      * @var string
      */
-    const STRATEGY_PROPERTIES = 'properties';
+    public const STRATEGY_PROPERTIES = 'properties';
 
     /**
      * Strategy that extracts data as is.
      *
      * @var string
      */
-    const STRATEGY_RAW = 'raw';
+    public const STRATEGY_RAW = 'raw';
 
     /**
      * Strategy that extracts data serialized in JSON format.
      *
      * @var string
      */
-    const STRATEGY_SERIALIZED = 'serialized';
+    public const STRATEGY_SERIALIZED = 'serialized';
 
     /**
      * The default configuration.
@@ -203,12 +204,16 @@ class TablePersister implements PersisterInterface
             $fields = $this->extractBasicFields($log, $serializeFields);
             $fields += $this->extractPrimaryKeyFields($log, $primaryKeyExtractionStrategy);
             $fields += $this->extractMetaFields(
-                $log, $extractMetaFields, $unsetExtractedMetaFields, $serializeFields
+                $log,
+                $extractMetaFields,
+                $unsetExtractedMetaFields,
+                $serializeFields
             );
 
             $persisterEntity = $PersisterTable->newEntity($fields);
 
-            if (!$PersisterTable->save($persisterEntity) &&
+            if (
+                !$PersisterTable->save($persisterEntity) &&
                 $logErrors
             ) {
                 $this->log($this->toErrorLog($persisterEntity));
