@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Persister;
 
 use AuditLog\Event\BaseEvent;
 use AuditLog\EventInterface;
-use Cake\Database\Type;
 use Cake\Database\Type\DateTimeType;
+use Cake\Database\TypeFactory;
 use Cake\Utility\Hash;
+use DateTime;
 
 trait ExtractionTrait
 {
@@ -27,11 +29,11 @@ trait ExtractionTrait
             'display_value' => $event->getDisplayValue(),
             'original' => null,
             'changed' => null,
-            'created' => new \DateTime($event->getTimestamp())
+            'created' => new DateTime($event->getTimestamp()),
         ];
 
-        if (Type::getMap('datetime') !== DateTimeType::class) {
-            $fields['created'] = (new \DateTime($event->getTimestamp()))->format('Y-m-d H:i:s');
+        if (TypeFactory::getMap('datetime') !== DateTimeType::class) {
+            $fields['created'] = (new DateTime($event->getTimestamp()))->format('Y-m-d H:i:s');
         }
 
         if (method_exists($event, 'getParentSourceName')) {
@@ -39,10 +41,8 @@ trait ExtractionTrait
         }
 
         if ($event instanceof BaseEvent) {
-            $fields['original'] = $fields['type'] == 'create' ? null :
-                ($serialize ? $this->serialize($event->getOriginal()) : $event->getOriginal());
-            $fields['changed'] = $fields['type'] == 'delete' ? null :
-                ($serialize ? $this->serialize($event->getChanged()) : $event->getChanged());
+            $fields['original'] = $serialize ? $this->serialize($event->getOriginal()) : $event->getOriginal();
+            $fields['changed'] = $serialize ? $this->serialize($event->getChanged()) : $event->getChanged();
         }
 
         return $fields;
@@ -106,14 +106,15 @@ trait ExtractionTrait
     protected function extractMetaFields(EventInterface $event, $fields, $unsetExtracted = true, $serialize = true)
     {
         $extracted = [
-            'meta' => $event->getMetaInfo()
+            'meta' => $event->getMetaInfo(),
         ];
 
         if (!is_array($extracted['meta'])) {
             return $extracted;
         }
 
-        if (!$fields ||
+        if (
+            !$fields ||
             empty($extracted['meta'])
         ) {
             if ($serialize) {
