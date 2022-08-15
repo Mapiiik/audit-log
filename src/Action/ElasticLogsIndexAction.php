@@ -1,7 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace AuditLog\Action;
 
 use Cake\ElasticSearch\IndexRegistry;
+use Cake\Http\Response;
 use Crud\Action\IndexAction;
 
 /**
@@ -10,51 +13,56 @@ use Crud\Action\IndexAction;
  */
 class ElasticLogsIndexAction extends IndexAction
 {
-
     use IndexConfigTrait;
 
     /**
      * Renders the index action by searching all documents matching the URL conditions.
      *
-     * @return void
+     * @return \Cake\Http\Response|null
      */
-    protected function _handle()
+    protected function _handle(): ?Response
     {
         $request = $this->_request();
         $this->_configIndex($this->_table(), $request);
         $query = $this->_table()->find();
-        $repository = $query->repository();
+        /** @var \Cake\ElasticSearch\Index $repository */
+        $repository = $query->getRepository();
 
         $query->searchOptions(['ignore_unavailable' => true]);
 
-        if ($request->query('type')) {
-            $repository->name($request->query('type'));
+        if ($request->getQuery('type')) {
+            $repository->setName($request->getQuery('type'));
+        }
+        if ($request->getQuery('primary_key')) {
+            $query->where(['primary_key' => $request->getQuery('primary_key')]);
         }
 
-        if ($request->query('primary_key')) {
-            $query->where(['primary_key' => $request->query('primary_key')]);
+        if ($request->getQuery('transaction')) {
+            $query->where(['transaction' => $request->getQuery('transaction')]);
         }
 
-        if ($request->query('transaction')) {
-            $query->where(['transaction' => $request->query('transaction')]);
+        if ($request->getQuery('user')) {
+            $query->where(['meta.user' => $request->getQuery('user')]);
         }
 
-        if ($request->query('user')) {
-            $query->where(['meta.user' => $request->query('user')]);
-        }
-
-        if ($request->query('changed_fields')) {
+        if ($request->getQuery('changed_fields')) {
             $query->where(function ($builder) use ($request) {
-                $fields = explode(',', $request->query('changed_fields'));
-                $fields = array_map(function ($f) { return 'changed.' . $f; }, array_map('trim', $fields));
+                $fields = explode(',', $request->getQuery('changed_fields'));
+                $fields = array_map(
+                    function ($f) {
+                        return 'changed.' . $f;
+                    },
+                    array_map('trim', $fields)
+                );
                 $fields = array_map([$builder, 'exists'], $fields);
+
                 return $builder->and_($fields);
             });
         }
 
-        if ($request->query('query')) {
+        if ($request->getQuery('query')) {
             $query->where(function ($builder) use ($request) {
-                return $builder->query(new \Elastica\Query\QueryString($request->query('query')));
+                return $builder->query(new \Elastica\Query\QueryString($request->getQuery('query')));
             });
         }
 
@@ -66,46 +74,49 @@ class ElasticLogsIndexAction extends IndexAction
         $subject = $this->_subject(['success' => true, 'query' => $query]);
         $this->_trigger('beforePaginate', $subject);
 
-        $items = $this->_controller()->paginate($subject->query);
+        $items = $this->_controller()->paginate($query);
         $subject->set(['entities' => $items]);
 
         $this->_trigger('afterPaginate', $subject);
         $this->_trigger('beforeRender', $subject);
+
+        return null;
     }
 
     /**
      * Returns the Repository object to use.
      *
-     * @return AuditLog\Model\Index\AuditLogsIndex;
+     * @return \AuditLog\Model\Index\AuditLogsIndex|\Cake\ElasticSearch\Index|\Cake\ORM\Table
      */
     protected function _table()
     {
-        return $this->_controller()->AuditLogs = IndexRegistry::get('AuditLog.AuditLogs');
+        return IndexRegistry::get('AuditLog.AuditLogs');
     }
 
     /**
      * Alters the query object to add the time constraints as they can be found in
      * the request object.
      *
-     * @param Cake\Http\Request $request The request where query string params can be found
-     * @param Cake\ElasticSearch\Query $query The Query to add filters to
+     * @param \Cake\Http\ServerRequest $request The request where query string params can be found
+     * @param \Cake\ElasticSearch\Query $query The Query to add filters to
      * @return void
      */
     protected function addTimeConstraints($request, $query)
     {
-        if ($request->query('from')) {
-            $from = new \DateTime($request->query('from'));
+        if ($request->getQuery('from')) {
+            $from = new \DateTime($request->getQuery('from'));
             $until = new \DateTime();
         }
 
-        if ($request->query('until')) {
-            $until = new \DateTime($request->query('until'));
+        if ($request->getQuery('until')) {
+            $until = new \DateTime($request->getQuery('until'));
         }
 
-        if (!empty($from)) {
+        if (!empty($from) && !empty($until)) {
             $query->where(function ($builder) use ($from, $until) {
                 return $builder->between('@timestamp', $from->format('Y-m-d H:i:s'), $until->format('Y-m-d H:i:s'));
             });
+
             return;
         }
 
