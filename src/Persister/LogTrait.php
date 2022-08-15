@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Persister;
 
@@ -20,8 +21,8 @@ trait LogTrait
     protected function toErrorLog(EntityInterface $entity, $depth = 4)
     {
         return sprintf(
-            '[%s] Persisting audit log failed. Data:' . PHP_EOL  . '%s',
-            __CLASS__,
+            '[%s] Persisting audit log failed. Data:' . PHP_EOL . '%s',
+            self::class,
             Debugger::exportVar($entity, $depth)
         );
     }
