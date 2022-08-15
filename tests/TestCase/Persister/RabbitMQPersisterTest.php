@@ -20,7 +20,7 @@ class RabbitMQPersisterTest extends TestCase
     {
         $client = $this->getMockBuilder(RabbitMQConnection::class)
             ->disableOriginalConstructor()
-            ->setMethods(['send'])
+            ->onlyMethods(['send'])
             ->getMock();
 
         $persister = new RabbitMQPersister();
@@ -51,7 +51,7 @@ class RabbitMQPersisterTest extends TestCase
     {
         $client = $this->getMockBuilder(RabbitMQConnection::class)
             ->disableOriginalConstructor()
-            ->setMethods(['send'])
+            ->onlyMethods(['send'])
             ->getMock();
 
         $persister = new RabbitMQPersister(['delivery_mode' => 1, 'routing' => 'foo', 'exchange' => 'bar']);
