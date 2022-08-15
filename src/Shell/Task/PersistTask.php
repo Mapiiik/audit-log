@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Shell\Task;
 
@@ -12,11 +13,10 @@ use Cake\Console\Shell;
  */
 class PersistTask extends Shell
 {
-
     /**
      * The persister object to use.
      *
-     * @var PersisterInterface
+     * @var \AuditLog\PersisterInterface
      */
     protected $persister;
 
@@ -43,10 +43,10 @@ class PersistTask extends Shell
      * Sets the persister object to use for logging al audit events.
      * If called if no arguments, it will return the ElasitSearchPersister.
      *
-     * @param PersisterInterface $persister The persister object to use
-     * @return PersisterInterface The configured persister
+     * @param \AuditLog\PersisterInterface $persister The persister object to use
+     * @return \AuditLog\PersisterInterface The configured persister
      */
-    public function persister(PersisterInterface $persister = null)
+    public function persister(?PersisterInterface $persister = null)
     {
         if ($persister === null && $this->persister === null) {
             $persister = new ElasticSearchPersister();

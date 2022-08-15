@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Shell\Task;
 
+use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;
 use Cake\Datasource\ConnectionManager;
-use Cake\I18n\Time;
-use Cake\Utility\Inflector;
+use Cake\I18n\FrozenTime;
 use Elastica\Document;
 
 /**
@@ -14,36 +15,36 @@ use Elastica\Document;
 class ElasticImportTask extends Shell
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getOptionParser()
+    public function getOptionParser(): ConsoleOptionParser
     {
         return parent::getOptionParser()
             ->setDescription('Imports audit logs from the legacy audit logs tables into elastic search')
             ->addOption('from', [
                 'short' => 'f',
                 'help' => 'The date from which to start importing audit logs',
-                'default' => 'now'
+                'default' => 'now',
             ])
             ->addOption('until', [
                 'short' => 'u',
                 'help' => 'The date in which to stop importing audit logs',
-                'default' => 'now'
+                'default' => 'now',
             ])->addOption('models', [
                 'short' => 'm',
-                'help' => 'A comma separated list of model names to import'
+                'help' => 'A comma separated list of model names to import',
             ])
             ->addOption('exclude-models', [
                 'short' => 'e',
-                'help' => 'A comma separated list of model names to skip importing'
+                'help' => 'A comma separated list of model names to skip importing',
             ])
             ->addOption('type-map', [
                 'short' => 't',
-                'help' => 'A comma separated list of model:type pairs (for example ParentCategory:categories)'
+                'help' => 'A comma separated list of model:type pairs (for example ParentCategory:categories)',
             ])
             ->addOption('extra-meta', [
                 'short' => 'a',
-                'help' => 'A comma separated list of key:value pairs to store in meta (for example app_name:frontend)'
+                'help' => 'A comma separated list of key:value pairs to store in meta (for example app_name:frontend)',
             ]);
     }
 
@@ -54,14 +55,14 @@ class ElasticImportTask extends Shell
      */
     public function main()
     {
-        $table = $this->loadModel('Audits');
+        $table = $this->fetchTable('Audits');
         $table->hasMany('AuditDeltas');
-        $table->schema()->columnType('created', 'text');
+        $table->getSchema()->setColumnType('created', 'text');
         $map = [];
         $meta = [];
 
         $featureList = function ($element) {
-            list($k, $v) = explode(':', $element);
+            [$k, $v] = explode(':', $element);
             yield $k => $v;
         };
 
@@ -75,15 +76,17 @@ class ElasticImportTask extends Shell
             $meta = collection($meta)->unfold($featureList)->toArray();
         }
 
-        $from = (new Time($this->params['from']))->modify('midnight');
-        $until = (new Time($this->params['until']))->modify('23:59:59');
+        $from = (new FrozenTime($this->params['from']))->modify('midnight');
+        $until = (new FrozenTime($this->params['until']))->modify('23:59:59');
 
         $currentId = null;
         $buffer = new \SplQueue();
         $buffer->setIteratorMode(\SplDoublyLinkedList::IT_MODE_DELETE);
         $queue = new \SplQueue();
         $queue->setIteratorMode(\SplDoublyLinkedList::IT_MODE_DELETE);
-        $index = ConnectionManager::get('auditlog_elastic')->getConfig('index');
+        /** @var \Elastica\Client $client */
+        $client = ConnectionManager::get('auditlog_elastic')->getDriver();
+        $index = $client->getConfig('index');
 
         $eventsFormatter = function ($audit) use ($index, $meta) {
             return $this->eventFormatter($audit, $index, $meta);
@@ -102,12 +105,14 @@ class ElasticImportTask extends Shell
                 if (!empty($this->params['models'])) {
                     $exp->in('Audits.model', explode(',', $this->params['models']));
                 }
+
                 return $exp;
             })
             ->matching('AuditDeltas')
             ->order(['Audits.created', 'AuditDeltas.audit_id'])
-            ->bufferResults(false)
-            ->hydrate(false)
+            ->disableBufferedResults()
+            ->disableHydration()
+            ->all()
             ->unfold(function ($audit) use ($buffer, &$currentId) {
                 if ($currentId && $currentId !== $audit['id']) {
                     yield collection($buffer)->toList();
@@ -160,13 +165,7 @@ class ElasticImportTask extends Shell
             return $value;
         }
 
-        $list = explode(',', $value);
-
-        if (empty($list)) {
-            return [];
-        }
-
-        return array_map('intval', $list);
+        return array_map('intval', explode(',', $value));
     }
 
     /**
@@ -180,6 +179,7 @@ class ElasticImportTask extends Shell
         if (is_string($value) && strpos($value, '0000-00-00') === 0) {
             return;
         }
+
         return $value;
     }
 
@@ -202,12 +202,18 @@ class ElasticImportTask extends Shell
         unset($audit['_matchingData']);
 
         $audit['original'] = collection($changes)
-            ->map(function ($c) { return $c['old_value']; })
+            ->map(function ($c) {
+
+                return $c['old_value'];
+            })
             ->map([$this, 'habtmFormatter'])
             ->map([$this, 'allBallsRemover'])
             ->toArray();
         $audit['changed'] = collection($changes)
-            ->map(function ($c) { return $c['new_value']; })
+            ->map(function ($c) {
+
+                return $c['new_value'];
+            })
             ->map([$this, 'habtmFormatter'])
             ->map([$this, 'allBallsRemover'])
             ->toArray();
@@ -221,7 +227,7 @@ class ElasticImportTask extends Shell
      * @param array $audit The audit log information
      * @param string $index The name of the index where the event should be stored
      * @param array $meta The meta information to append to the meta array
-     * @return Elastica\Document
+     * @return \Elastica\Document
      */
     public function eventFormatter($audit, $index, $meta = [])
     {
@@ -236,12 +242,13 @@ class ElasticImportTask extends Shell
                 'ip' => $audit['source_ip'],
                 'url' => $audit['source_url'],
                 'user' => $audit['source_id'],
-            ]
+            ],
         ];
 
         $index = sprintf($index, \DateTime::createFromFormat('Y-m-d H:i:s', $audit['created'])->format('-Y.m.d'));
-        $type = isset($map[$audit['model']]) ? $map[$audit['model']] : Inflector::tableize($audit['model']);
-        return new Document($audit['id'], $data, $type, $index);
+        //$type = isset($map[$audit['model']]) ? $map[$audit['model']] : Inflector::tableize($audit['model']);
+
+        return new Document($audit['id'], $data, $index);
     }
 
     /**
@@ -254,9 +261,12 @@ class ElasticImportTask extends Shell
     {
         if (empty($documents)) {
             $this->log('No more documents to index', 'info');
+
             return;
         }
         $this->log(sprintf('Indexing %d documents', count($documents)), 'info');
-        ConnectionManager::get('auditlog_elastic')->addDocuments($documents);
+        /** @var \Elastica\Client $client */
+        $client = ConnectionManager::get('auditlog_elastic')->getDriver();
+        $client-> addDocuments($documents);
     }
 }
