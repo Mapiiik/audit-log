@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Test\Persister;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
 
 class RequestMetadataTest extends TestCase
 {
-
     use EventDispatcherTrait;
 
     /**
@@ -20,19 +20,19 @@ class RequestMetadataTest extends TestCase
      */
     public function testRequestDataIsAdded()
     {
-        $request = $this->createMock(Request::class, ['clientIp', 'here']);
+        $request = $this->createMock(Request::class);
         $listener = new RequestMetadata($request, 'jose');
         $this->getEventManager()->on($listener);
 
         $request->expects($this->once())->method('clientIp')->will($this->returnValue('12345'));
         $request->expects($this->once())->method('getRequestTarget')->will($this->returnValue('/things?a=b'));
-        $logs[] = new AuditDeleteEvent(1234, 1, 'articles');
+        $logs[] = new AuditDeleteEvent('1234', 1, 'articles', null, ['title' => 'bar'], 'bar');
         $event = $this->dispatchEvent('AuditLog.beforeLog', ['logs' => $logs]);
 
         $expected = [
             'ip' => '12345',
             'url' => '/things?a=b',
-            'user' => 'jose'
+            'user' => 'jose',
         ];
         $this->assertEquals($expected, $logs[0]->getMetaInfo());
     }
