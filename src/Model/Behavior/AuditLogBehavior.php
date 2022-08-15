@@ -34,7 +34,7 @@ class AuditLogBehavior extends Behavior
     protected $_defaultConfig = [
         'index' => null,
         'type' => null,
-        'blacklist' => ['created', 'modified', 'id'],
+        'blacklist' => ['created', 'modified'],
         'whitelist' => [],
         'foreignKeys' => [],
         'unsetAssociatedEntityFieldsNotDirtyByFieldName' => [],
