@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace AuditLog\Test\Model\Behavior;
 
@@ -18,7 +19,7 @@ class AuditLogBehaviorTest extends TestCase
         $this->table = new Table(['table' => 'articles']);
         $this->table->setPrimaryKey('id');
         $this->behavior = new AuditLogBehavior($this->table, [
-            'whitelist' => ['id', 'title', 'body', 'author_id']
+            'whitelist' => ['id', 'title', 'body', 'author_id'],
         ]);
     }
 
@@ -38,10 +39,10 @@ class AuditLogBehaviorTest extends TestCase
         $this->behavior->afterSave($event, $entity, [
             '_auditQueue' => $queue,
             '_auditTransaction' => 1,
-            'associated' => []
+            'associated' => [],
         ]);
         $result = $queue[$entity];
-        $this->assertEquals($result->getOriginal(), $result->getChanged());
+        $this->assertEquals(null, $result->getOriginal());
         unset($data['something_extra']);
         $this->assertEquals($data, $result->getChanged());
         $this->assertEquals(13, $result->getId());
@@ -56,7 +57,7 @@ class AuditLogBehaviorTest extends TestCase
             'title' => 'The Title',
             'body' => 'The Body',
             'author_id' => 1,
-            'something_extra' => true
+            'something_extra' => true,
         ];
         $entity = new Entity($data, ['markNew' => false, 'markClean' => true]);
         $entity->title = 'Another Title';
@@ -66,7 +67,7 @@ class AuditLogBehaviorTest extends TestCase
         $this->behavior->afterSave($event, $entity, [
             '_auditQueue' => $queue,
             '_auditTransaction' => 1,
-            'associated' => []
+            'associated' => [],
         ]);
         $result = $queue[$entity];
         $this->assertEquals(['title' => 'Another Title'], $result->getChanged());
@@ -93,10 +94,10 @@ class AuditLogBehaviorTest extends TestCase
         $this->behavior->afterSave($event, $entity, [
             '_auditQueue' => $queue,
             '_auditTransaction' => 1,
-            'associated' => []
+            'associated' => [],
         ]);
         $result = $queue[$entity];
-        $this->assertEquals($result->getOriginal(), $result->getChanged());
+        $this->assertEquals(null, $result->getOriginal());
         unset($data['something_extra'], $data['author_id']);
         $this->assertEquals($data, $result->getChanged());
     }
@@ -108,7 +109,7 @@ class AuditLogBehaviorTest extends TestCase
             'id' => 13,
             'title' => 'The Title',
             'body' => 'The Body',
-            'author_id' => 1
+            'author_id' => 1,
         ];
         $entity = new Entity($data, ['markNew' => false, 'markClean' => true]);
         $entity->author_id = 50;
@@ -118,7 +119,7 @@ class AuditLogBehaviorTest extends TestCase
         $this->behavior->afterSave($event, $entity, [
             '_auditQueue' => $queue,
             '_auditTransaction' => 1,
-            'associated' => []
+            'associated' => [],
         ]);
 
         $this->assertFalse(isset($queue[$entity]));
@@ -129,7 +130,7 @@ class AuditLogBehaviorTest extends TestCase
         $this->table->setSchema([
             'id' => ['type' => 'integer'],
             'title' => ['type' => 'text'],
-            'body' => ['type' => 'text']
+            'body' => ['type' => 'text'],
         ]);
         $this->behavior->setConfig('whitelist', false);
         $data = [
@@ -145,7 +146,7 @@ class AuditLogBehaviorTest extends TestCase
         $this->behavior->afterSave($event, $entity, [
             '_auditQueue' => $queue,
             '_auditTransaction' => 1,
-            'associated' => []
+            'associated' => [],
         ]);
         $result = $queue[$entity];
         unset($data['something_extra'], $data['author_id']);
