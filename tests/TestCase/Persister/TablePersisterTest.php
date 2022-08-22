@@ -107,6 +107,7 @@ class TablePersisterTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The `$table` argument must be either a table alias, or an instance of `\Cake\ORM\Table`.');
+        /** @psalm-suppress NullArgument **/
         $this->TablePersister->setTable(null); /* @phpstan-ignore-line */
     }
 
@@ -695,7 +696,7 @@ class TablePersisterTest extends TestCase
     }
 
     /**
-     * @return \Cake\ORM\Table|\PHPUnit\Framework\MockObject\MockObject
+     * @return \AuditLog\Model\Table\AuditLogsTable|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getMockForModel($alias, array $methods = [], array $options = [])
     {
