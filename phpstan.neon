@@ -6,5 +6,6 @@ parameters:
     paths:
         - config
         - src
+        - tests
     excludePaths:
         - src/Console/Installer.php
