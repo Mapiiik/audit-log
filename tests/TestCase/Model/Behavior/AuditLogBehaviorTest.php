@@ -67,6 +67,7 @@ class AuditLogBehaviorTest extends TestCase
             '_auditTransaction' => 1,
             'associated' => [],
         ]));
+        /** @psalm-suppress InvalidArgument **/
         $result = $queue[$entity];
         $this->assertEquals(null, $result->getOriginal());
         unset($data['something_extra']);
@@ -100,6 +101,7 @@ class AuditLogBehaviorTest extends TestCase
             '_auditTransaction' => 1,
             'associated' => [],
         ]));
+        /** @psalm-suppress InvalidArgument **/
         $result = $queue[$entity];
         $this->assertEquals(['title' => 'Another Title'], $result->getChanged());
         $this->assertEquals(['title' => 'The Title'], $result->getOriginal());
@@ -132,6 +134,7 @@ class AuditLogBehaviorTest extends TestCase
             '_auditTransaction' => 1,
             'associated' => [],
         ]));
+        /** @psalm-suppress InvalidArgument **/
         $result = $queue[$entity];
         $this->assertEquals(null, $result->getOriginal());
         unset($data['something_extra'], $data['author_id']);
@@ -163,6 +166,7 @@ class AuditLogBehaviorTest extends TestCase
             'associated' => [],
         ]));
 
+        /** @psalm-suppress InvalidArgument **/
         $this->assertFalse(isset($queue[$entity]));
     }
 
@@ -194,6 +198,7 @@ class AuditLogBehaviorTest extends TestCase
             '_auditTransaction' => 1,
             'associated' => [],
         ]));
+        /** @psalm-suppress InvalidArgument **/
         $result = $queue[$entity];
         unset($data['something_extra'], $data['author_id']);
         $this->assertEquals($data, $result->getChanged());
