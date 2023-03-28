@@ -2,7 +2,12 @@
     "name": "mapik/audit-log",
     "description": "Flexible and rock solid audit log tracking plugin for CakePHP",
     "type": "cakephp-plugin",
+    "homepage": "https://github.com/Mapiiik/audit-log",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/Mapiiik/audit-log/issues",
+        "source": "https://github.com/Mapiiik/audit-log"
+    },
     "require": {
         "php": ">=7.4",
         "cakephp/orm": "^4.0"
