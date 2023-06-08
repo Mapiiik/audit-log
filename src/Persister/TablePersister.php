@@ -8,6 +8,7 @@ use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
+use InvalidArgumentException;
 
 /**
  * A persister that uses the ORM API to persist audit logs.
@@ -112,7 +113,7 @@ class TablePersister implements PersisterInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'extractMetaFields' => false,
         'logErrors' => true,
         'primaryKeyExtractionStrategy' => self::STRATEGY_AUTOMATIC,
@@ -126,7 +127,7 @@ class TablePersister implements PersisterInterface
      *
      * @var \Cake\ORM\Table
      */
-    protected $_table;
+    protected Table $_table;
 
     /**
      * @return void
@@ -152,9 +153,9 @@ class TablePersister implements PersisterInterface
      *
      * @return \Cake\ORM\Table
      */
-    public function getTable()
+    public function getTable(): Table
     {
-        if ($this->_table === null) {
+        if (!isset($this->_table)) {
             $this->setTable($this->getConfig('table'));
         }
 
@@ -164,17 +165,17 @@ class TablePersister implements PersisterInterface
     /**
      * Sets the table to use for persisting logs.
      *
-     * @param string|\Cake\ORM\Table $table Either a string denoting a table alias, or a table object.
+     * @param \Cake\ORM\Table|string $table Either a string denoting a table alias, or a table object.
      * @return $this
      */
-    public function setTable($table)
+    public function setTable(Table|string|null $table)
     {
         if (is_string($table)) {
             $table = $this->getTableLocator()->get($table);
         }
 
         if (!($table instanceof Table)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'The `$table` argument must be either a table alias, or an instance of `\Cake\ORM\Table`.'
             );
         }
@@ -187,10 +188,10 @@ class TablePersister implements PersisterInterface
     /**
      * Persists each of the passed EventInterface objects.
      *
-     * @param \AuditLog\EventInterface[] $auditLogs List of EventInterface objects to persist
+     * @param array<\AuditLog\EventInterface> $auditLogs List of EventInterface objects to persist
      * @return void
      */
-    public function logEvents(array $auditLogs)
+    public function logEvents(array $auditLogs): void
     {
         $PersisterTable = $this->getTable();
 

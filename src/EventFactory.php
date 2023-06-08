@@ -21,7 +21,7 @@ class EventFactory
      * @param array $data The array data from elastic search
      * @return \AuditLog\EventInterface
      */
-    public function create(array $data)
+    public function create(array $data): EventInterface
     {
         $map = [
             'create' => AuditCreateEvent::class,

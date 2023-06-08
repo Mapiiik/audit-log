@@ -19,7 +19,7 @@ trait ExtractionTrait
      * @param bool $serialize Whether to serialize fields that are expected to hold array data.
      * @return array
      */
-    protected function extractBasicFields(EventInterface $event, $serialize = true)
+    protected function extractBasicFields(EventInterface $event, bool $serialize = true): array
     {
         $fields = [
             'transaction' => $event->getTransactionId(),
@@ -55,7 +55,7 @@ trait ExtractionTrait
      * @param string $strategy The strategy to use for extracting the primary key.
      * @return array
      */
-    protected function extractPrimaryKeyFields(EventInterface $event, $strategy = 'automatic')
+    protected function extractPrimaryKeyFields(EventInterface $event, string $strategy = 'automatic'): array
     {
         $primaryKeyFields = [];
 
@@ -103,8 +103,12 @@ trait ExtractionTrait
      * @param bool $serialize Whether to serialize fields that are expected to hold array data.
      * @return array
      */
-    protected function extractMetaFields(EventInterface $event, $fields, $unsetExtracted = true, $serialize = true)
-    {
+    protected function extractMetaFields(
+        EventInterface $event,
+        array|bool $fields,
+        bool $unsetExtracted = true,
+        bool $serialize = true
+    ): array {
         $extracted = [
             'meta' => $event->getMetaInfo(),
         ];
@@ -169,7 +173,7 @@ trait ExtractionTrait
      * @param mixed $value The value to convert to JSON.
      * @return string|null
      */
-    protected function serialize($value)
+    protected function serialize(mixed $value): ?string
     {
         if ($value === null) {
             return $value;

@@ -7,12 +7,14 @@ use ArrayObject;
 use AuditLog\Event\AuditCreateEvent;
 use AuditLog\Event\AuditDeleteEvent;
 use AuditLog\Event\AuditUpdateEvent;
-use AuditLog\Persister\ElasticSearchPersister;
+use AuditLog\Persister\TablePersister;
 use AuditLog\PersisterInterface;
+use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
+use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Inflector;
 use Cake\Utility\Text;
@@ -46,7 +48,7 @@ class AuditLogBehavior extends Behavior
      *
      * @var \AuditLog\PersisterInterface
      */
-    protected $persister;
+    protected PersisterInterface $persister;
 
     /**
      * Returns the list of implemented events.
@@ -74,7 +76,7 @@ class AuditLogBehavior extends Behavior
      * @param \ArrayObject $options The options to be passed to the save or delete operation
      * @return void
      */
-    public function injectTracking(EventInterface $event, EntityInterface $entity, ArrayObject $options)
+    public function injectTracking(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         if (!isset($options['_auditTransaction'])) {
             $options['_auditTransaction'] = Text::uuid();
@@ -129,7 +131,7 @@ class AuditLogBehavior extends Behavior
      * @param \ArrayObject $options Options array containing the `_auditQueue` key
      * @return void
      */
-    public function afterSave(EventInterface $event, EntityInterface $entity, $options)
+    public function afterSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         if (!isset($options['_auditQueue'])) {
             return;
@@ -170,7 +172,7 @@ class AuditLogBehavior extends Behavior
                     in_array($property, array_keys($original))
                     && is_array($original[$property])
                     && count($original[$property]) > 0
-                    && $original[$property][0] instanceof \Cake\ORM\Entity
+                    && $original[$property][0] instanceof Entity
                 ) { // i.e. associted properies
                     foreach ($original[$property] as $associatedKey => $associatedRow) {
                         if (!$associatedRow->isDirty()) {
@@ -228,7 +230,7 @@ class AuditLogBehavior extends Behavior
                 // single entity
                 if (
                     in_array($property, array_keys($original))
-                    && $original[$property] instanceof \Cake\ORM\Entity
+                    && $original[$property] instanceof Entity
                 ) {
                     if (!$original[$property]->isDirty()) {
                         unset(
@@ -288,13 +290,13 @@ class AuditLogBehavior extends Behavior
      * @param \ArrayObject $options Options array containing the `_auditQueue` key
      * @return void
      */
-    public function afterCommit(EventInterface $event, EntityInterface $entity, $options)
+    public function afterCommit(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         if (!isset($options['_auditQueue']) || $options['_auditQueue']->count() == 0) {
             return;
         }
 
-        $events = collection($options['_auditQueue'])
+        $events = (new Collection($options['_auditQueue']))
             ->map(function ($entity, $pos, $it) {
                 return $it->getInfo();
             })
@@ -325,7 +327,7 @@ class AuditLogBehavior extends Behavior
      * @param \ArrayObject $options Options array containing the `_auditQueue` key
      * @return void
      */
-    public function afterDelete(EventInterface $event, EntityInterface $entity, $options)
+    public function afterDelete(EventInterface $event, EntityInterface $entity, ArrayObject $options): void
     {
         if (!isset($options['_auditQueue'])) {
             return;
@@ -372,17 +374,16 @@ class AuditLogBehavior extends Behavior
      * Sets the persister object to use for logging all audit events.
      * If called with no arguments, it will return the currently configured persister.
      *
-     * @param \AuditLog\PersisterInterface $persister The persister object to use
-     * @return \AuditLog\PersisterInterface The configured persister
+     * @param \AuditLog\PersisterInterface|null $persister The persister object to use
+     * @return \AuditLog\PersisterInterface|null The configured persister
      */
-    public function persister(?PersisterInterface $persister = null)
+    public function persister(?PersisterInterface $persister = null): ?PersisterInterface
     {
-        if ($persister === null && $this->persister === null) {
-            $class = Configure::read('AuditLog.persister') ?: ElasticSearchPersister::class;
-            $index = $this->getConfig('index') ?: $this->_table->getTable();
-            $type = $this->getConfig('type') ?: Inflector::singularize($index);
+        if ($persister == null && $this->persister == null) {
+            $class = Configure::read('AuditLog.persister') ?: TablePersister::class;
+            $table = $this->getConfig('table') ?: $this->_table->getTable();
 
-            $persister = new $class(compact('index', 'type'));
+            $persister = new $class(compact('table'));
         }
 
         if ($persister === null) {
@@ -398,7 +399,7 @@ class AuditLogBehavior extends Behavior
      * @param array $associated Whitelist of associations to look for
      * @return array List of property names
      */
-    protected function getAssociationProperties($associated)
+    protected function getAssociationProperties(array $associated): array
     {
         $associations = $this->_table->associations();
         $result = [];
@@ -413,7 +414,7 @@ class AuditLogBehavior extends Behavior
     /**
      * @return void
      */
-    private function setCommonConfig()
+    private function setCommonConfig(): void
     {
         $commonBlacklist = Configure::read('AuditLog.blacklist') ?? null;
         if (isset($commonBlacklist)) {

@@ -5,8 +5,6 @@ use Migrations\AbstractMigration;
 
 class CreateAuditLogs extends AbstractMigration
 {
-    public $autoId = false;
-
     /**
      * Up Method.
      *
@@ -15,8 +13,10 @@ class CreateAuditLogs extends AbstractMigration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
+        $this->autoId = false;
+
         $this->table('audit_logs')
             ->addColumn('id', 'integer', [
                 'autoIncrement' => true,
@@ -101,7 +101,7 @@ class CreateAuditLogs extends AbstractMigration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         $this->table('audit_logs')->drop()->save();
     }

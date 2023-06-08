@@ -40,8 +40,8 @@ abstract class BaseEvent implements EventInterface
      * @param string|null $displayValue Human friendly text for the record.
      */
     public function __construct(
-        $transactionId,
-        $id,
+        mixed $transactionId,
+        mixed $id,
         string $source,
         ?array $changed,
         ?array $original,

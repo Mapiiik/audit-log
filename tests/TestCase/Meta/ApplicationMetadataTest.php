@@ -10,6 +10,9 @@ use Cake\TestSuite\TestCase;
 
 class ApplicationMetadataTest extends TestCase
 {
+    /**
+     * @use EventDispatcherTrait<object>
+     */
     use EventDispatcherTrait;
 
     /**
@@ -22,7 +25,7 @@ class ApplicationMetadataTest extends TestCase
         $listener = new ApplicationMetadata('my_app', ['extra' => 'thing']);
         $this->getEventManager()->on($listener);
         $logs[] = new AuditDeleteEvent('1234', 1, 'articles', null, ['title' => 'bar'], 'bar');
-        $event = $this->dispatchEvent('AuditLog.beforeLog', ['logs' => $logs]);
+        $this->dispatchEvent('AuditLog.beforeLog', ['logs' => $logs]);
 
         $expected = [
             'app_name' => 'my_app',

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditStash\Persister;
+namespace AuditLog\Persister;
 
 use AuditLog\PersisterInterface;
 use Cake\Datasource\ConnectionManager;
+use ProcessMQ\Connection\RabbitMQConnection;
 
 /**
  * Implementes audit logs events persisting using RabbitMQ.
@@ -16,14 +17,14 @@ class RabbitMQPersister implements PersisterInterface
      *
      * @var \ProcessMQ\Connection\RabbitMQConnection
      */
-    protected $connection;
+    protected RabbitMQConnection $connection;
 
     /**
      * The options set for this persister.
      *
      * @var array
      */
-    protected $options;
+    protected array $options;
 
     /**
      * Sets the options for this persister. The available options are:
@@ -36,7 +37,7 @@ class RabbitMQPersister implements PersisterInterface
      * @param array $options Options for this persister.
      * @return void
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $options += [
             'connection' => 'auditlog_rabbit',
@@ -53,7 +54,7 @@ class RabbitMQPersister implements PersisterInterface
      * @param \AuditLog\EventInterface[] $auditLogs An array of EventInterface objects
      * @return void
      */
-    public function logEvents(array $auditLogs)
+    public function logEvents(array $auditLogs): void
     {
         $this->connection()->send(
             $this->options['exchange'],
@@ -70,10 +71,10 @@ class RabbitMQPersister implements PersisterInterface
      * @param \ProcessMQ\Connection\RabbitMQConnection|null $connection The conneciton to elastic search
      * @return \ProcessMQ\Connection\RabbitMQConnection
      */
-    public function connection($connection = null)
+    public function connection(?RabbitMQConnection $connection = null): RabbitMQConnection
     {
-        if ($connection === null) {
-            if ($this->connection === null) {
+        if ($connection == null) {
+            if (!isset($this->connection)) {
                 /** @var \ProcessMQ\Connection\RabbitMQConnection $connection */
                 $connection = ConnectionManager::get($this->options['connection']);
                 $this->connection = $connection;

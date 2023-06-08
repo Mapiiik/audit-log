@@ -13,6 +13,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use DateTime;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -108,8 +109,7 @@ class TablePersisterTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The `$table` argument must be either a table alias, or an instance of `\Cake\ORM\Table`.');
-        /** @psalm-suppress NullArgument **/
-        $this->TablePersister->setTable(null); /* @phpstan-ignore-line */
+        $this->TablePersister->setTable(null);
     }
 
     /**
@@ -128,7 +128,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => null,
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => null,
         ]);
@@ -167,7 +167,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => '{"baz":{"bar":"foo"}}',
             'foo' => 'bar',
@@ -214,7 +214,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => '[]',
             'foo' => 'bar',
@@ -257,7 +257,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => '{"foo":"bar"}',
             'foo' => 'bar',
@@ -299,7 +299,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => '{"foo":"bar"}',
             'foo' => 'bar',
@@ -342,7 +342,7 @@ class TablePersisterTest extends TestCase
             'display_value' => 'Test',
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => null,
         ]);
@@ -415,7 +415,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => '[1,2,3]',
             'meta' => null,
         ]);
@@ -449,7 +449,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => null,
         ]);
@@ -484,7 +484,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => [1, 2, 3],
             'meta' => null,
         ]);
@@ -521,7 +521,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => null,
         ]);
@@ -556,7 +556,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key_0' => 1,
             'primary_key_1' => 2,
             'primary_key_2' => 3,
@@ -593,7 +593,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => '"pk"',
             'meta' => null,
         ]);
@@ -630,7 +630,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => '[]',
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => '[1,2,3]',
             'meta' => null,
         ]);
@@ -670,7 +670,7 @@ class TablePersisterTest extends TestCase
             'parent_source' => null,
             'original' => null,
             'changed' => [],
-            'created' => new \DateTime($event->getTimestamp()),
+            'created' => new DateTime($event->getTimestamp()),
             'primary_key' => 1,
             'meta' => [
                 'foo' => 'bar',
@@ -697,7 +697,7 @@ class TablePersisterTest extends TestCase
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getMockForModel(string $alias, array $methods = [], array $options = []): Table|MockObject
     {

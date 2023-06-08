@@ -12,8 +12,8 @@ interface PersisterInterface
     /**
      * Persists each of the passed EventInterface objects.
      *
-     * @param \AuditLog\EventInterface[] $auditLogs List of EventInterface objects to persist
+     * @param array<\AuditLog\EventInterface> $auditLogs List of EventInterface objects to persist
      * @return void
      */
-    public function logEvents(array $auditLogs);
+    public function logEvents(array $auditLogs): void;
 }

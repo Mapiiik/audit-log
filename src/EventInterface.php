@@ -23,14 +23,14 @@ interface EventInterface extends JsonSerializable, Serializable
      *
      * @return mixed
      */
-    public function getTransactionId();
+    public function getTransactionId(): mixed;
 
     /**
      * Returns the id of the entity that was created or altered.
      *
      * @return mixed
      */
-    public function getId();
+    public function getId(): mixed;
 
     /**
      * Returns the repository name in which the entity is.
@@ -66,7 +66,7 @@ interface EventInterface extends JsonSerializable, Serializable
      * @param array|null $meta The meta information to attach to the event
      * @return void
      */
-    public function setMetaInfo(?array $meta);
+    public function setMetaInfo(?array $meta): void;
 
     /**
      * Returns the display field value.

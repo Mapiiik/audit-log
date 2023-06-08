@@ -13,14 +13,14 @@ trait BaseEventTrait
      *
      * @var mixed
      */
-    protected $transactionId;
+    protected mixed $transactionId;
 
     /**
      * Entity primary key.
      *
      * @var mixed
      */
-    protected $id;
+    protected mixed $id;
 
     /**
      * Repository name.
@@ -60,7 +60,7 @@ trait BaseEventTrait
      *
      * @return mixed
      */
-    public function getTransactionId()
+    public function getTransactionId(): mixed
     {
         return $this->transactionId;
     }
@@ -70,7 +70,7 @@ trait BaseEventTrait
      *
      * @return mixed
      */
-    public function getId()
+    public function getId(): mixed
     {
         if (is_array($this->id) && count($this->id) === 1) {
             return current($this->id);
@@ -105,7 +105,7 @@ trait BaseEventTrait
      * @param string $source The repository name
      * @return void
      */
-    public function setParentSourceName($source)
+    public function setParentSourceName(string $source): void
     {
         $this->parentSource = $source;
     }
@@ -136,7 +136,7 @@ trait BaseEventTrait
      * @param array|null $meta The meta information to attach to the event
      * @return void
      */
-    public function setMetaInfo(?array $meta)
+    public function setMetaInfo(?array $meta): void
     {
         $this->meta = $meta;
     }

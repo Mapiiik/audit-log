@@ -66,8 +66,7 @@ class AuditIntegrationTest extends TestCase
 
         /** @var \AuditLog\Model\Behavior\AuditLogBehavior $auditLog */
         $auditLog = $this->table->getBehavior('AuditLog');
-        /** @var \AuditLog\Persister\FakePersister $auditLogPersister */
-        $auditLogPersister = $auditLog->persister($this->persister);
+        $auditLog->persister($this->persister);
     }
 
     /**
@@ -176,9 +175,8 @@ class AuditIntegrationTest extends TestCase
      */
     public function testUpdateArticleWithExistingBelongsTo()
     {
-        $entity = $this->table->get(1, [
-            'contain' => ['Authors'],
-        ]);
+        $entity = $this->table->get(1, contain: ['Authors']);
+
         $entity->title = 'Changed title'; /* @phpstan-ignore-line */
         $entity->author = $this->table->Authors->get(2); /* @phpstan-ignore-line */
 
@@ -256,9 +254,8 @@ class AuditIntegrationTest extends TestCase
             'className' => AuditLogBehavior::class,
         ]);
 
-        $entity = $this->table->get(1, [
-            'contain' => ['Comments'],
-        ]);
+        $entity = $this->table->get(1, contain: ['Comments']);
+
         /* @phpstan-ignore-next-line */
         $entity->comments[] = $this->table->Comments->newEntity([
             'user_id' => 1,
@@ -360,9 +357,8 @@ class AuditIntegrationTest extends TestCase
             'className' => AuditLogBehavior::class,
         ]);
 
-        $entity = $this->table->get(1, [
-            'contain' => ['Tags'],
-        ]);
+        $entity = $this->table->get(1, contain: ['Tags']);
+
         /* @phpstan-ignore-next-line */
         $entity->tags[] = $this->table->Tags->newEntity([
             'name' => 'This is a Tag',
@@ -429,9 +425,7 @@ class AuditIntegrationTest extends TestCase
         $this->table->Comments->addBehavior('AuditLog', [
             'className' => AuditLogBehavior::class,
         ]);
-        $entity = $this->table->get(1, [
-            'contain' => ['Comments', 'Tags'],
-        ]);
+        $entity = $this->table->get(1, contain: ['Comments', 'Tags']);
 
         /* @phpstan-ignore-next-line */
         $this->table->Comments->setDependent(true);

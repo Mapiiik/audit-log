@@ -11,6 +11,9 @@ use Cake\TestSuite\TestCase;
 
 class RequestMetadataTest extends TestCase
 {
+    /**
+     * @use EventDispatcherTrait<object>
+     */
     use EventDispatcherTrait;
 
     /**
@@ -27,7 +30,7 @@ class RequestMetadataTest extends TestCase
         $request->expects($this->once())->method('clientIp')->will($this->returnValue('12345'));
         $request->expects($this->once())->method('getRequestTarget')->will($this->returnValue('/things?a=b'));
         $logs[] = new AuditDeleteEvent('1234', 1, 'articles', null, ['title' => 'bar'], 'bar');
-        $event = $this->dispatchEvent('AuditLog.beforeLog', ['logs' => $logs]);
+        $this->dispatchEvent('AuditLog.beforeLog', ['logs' => $logs]);
 
         $expected = [
             'ip' => '12345',
