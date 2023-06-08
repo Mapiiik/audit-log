@@ -9,19 +9,19 @@
         "source": "https://github.com/Mapiiik/audit-log"
     },
     "require": {
-        "php": ">=7.4",
-        "cakephp/orm": "^4.0"
+        "php": ">=8.1",
+        "cakephp/cakephp": "^5.0"
     },
     "require-dev": {
-        "cakephp/cakephp": "^4.0",
+        "cakephp/cakephp": "^5.0",
         "cakephp/cakephp-codesniffer": "^4.0.0",
-        "cakephp/elastic-search": "^3.0",
-        "cakephp/migrations": "^3.5",
-        "friendsofcake/crud": "^6.1",
+        "cakephp/elastic-search": "^4.0",
+        "cakephp/migrations": "^4.0",
+        "friendsofcake/crud": "dev-cake-5",
         "friendsofcake/process-mq": "dev-master",
         "phpstan/phpstan": "^1.8",
-        "phpunit/phpunit": "~8.5.0 || ^9.3",
-        "psalm/phar": "^4.24"
+        "phpunit/phpunit": "^10.1.0",
+        "psalm/phar": "^5.12"
     },
     "suggest": {
         "cakephp/elastic-search": "The optional persister engine for audit-log is elastic search and requires this plugin",
@@ -40,6 +40,7 @@
         }
     },
     "prefer-stable": true,
+    "minimum-stability": "dev",
     "config": {
         "sort-packages": true,
         "allow-plugins": {
