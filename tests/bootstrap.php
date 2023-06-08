@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Cake\Datasource\ConnectionManager;
-use Cake\ElasticSearch\TestSuite\Fixture\MappingGenerator;
 use Cake\TestSuite\Fixture\SchemaLoader;
 
 /**
@@ -49,7 +48,3 @@ ConnectionManager::setConfig('test_elastic', ['url' => getenv('ELASTIC_URL')]);
 // Create test database schema
 $loader = new SchemaLoader();
 $loader->loadInternalFile($root . '/tests/schema.php');
-
-// Create test elasticsearch schema
-$generator = new MappingGenerator($root . '/tests/mappings.php', 'test_elastic');
-$generator->reload();
