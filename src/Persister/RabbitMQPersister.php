@@ -51,7 +51,7 @@ class RabbitMQPersister implements PersisterInterface
     /**
      * Persists all the audit log event objects that are provided.
      *
-     * @param \AuditLog\EventInterface[] $auditLogs An array of EventInterface objects
+     * @param array<\AuditLog\EventInterface> $auditLogs An array of EventInterface objects
      * @return void
      */
     public function logEvents(array $auditLogs): void
@@ -73,7 +73,7 @@ class RabbitMQPersister implements PersisterInterface
      */
     public function connection(?RabbitMQConnection $connection = null): RabbitMQConnection
     {
-        if ($connection == null) {
+        if ($connection === null) {
             if (!isset($this->connection)) {
                 /** @var \ProcessMQ\Connection\RabbitMQConnection $connection */
                 $connection = ConnectionManager::get($this->options['connection']);

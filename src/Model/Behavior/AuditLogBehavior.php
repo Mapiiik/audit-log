@@ -379,7 +379,7 @@ class AuditLogBehavior extends Behavior
      */
     public function persister(?PersisterInterface $persister = null): ?PersisterInterface
     {
-        if ($persister == null && $this->persister == null) {
+        if ($persister === null && !isset($this->persister)) {
             $class = Configure::read('AuditLog.persister') ?: TablePersister::class;
             $table = $this->getConfig('table') ?: $this->_table->getTable();
 
