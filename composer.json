@@ -14,19 +14,15 @@
     },
     "require-dev": {
         "cakephp/cakephp": "^5.0",
-        "cakephp/cakephp-codesniffer": "^4.0.0",
-        "cakephp/elastic-search": "^4.0",
+        "cakephp/cakephp-codesniffer": "^5.0",
         "cakephp/migrations": "^4.0",
-        "friendsofcake/crud": "dev-cake-5",
         "friendsofcake/process-mq": "dev-master",
         "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^10.1.0",
         "psalm/phar": "^5.12"
     },
     "suggest": {
-        "cakephp/elastic-search": "The optional persister engine for audit-log is elastic search and requires this plugin",
-        "friendsofcake/process-mq": "Use this package if you prefer sending the audit events to RabbitMQ",
-        "friendsofcake/crud": "audit-log provide Crud Action classes for displaying audit logs"
+        "friendsofcake/process-mq": "Use this package if you prefer sending the audit events to RabbitMQ"
     },
     "autoload": {
         "psr-4": {

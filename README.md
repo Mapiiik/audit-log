@@ -1,4 +1,4 @@
-# AuditLog Plugin For CakePHP 4.x
+# AuditLog Plugin For CakePHP 5.x
 
 This plugin is forked from [lorenzo/audit-stash](https://github.com/lorenzo/audit-stash)
 
@@ -27,7 +27,7 @@ You can install this plugin into your CakePHP application using [composer](https
 following lines in the root of your application.
 
 ```
-composer require kdesilva/audit-trail
+composer require mapik/audit-log
 bin/cake plugin load AuditLog
 ```
 
