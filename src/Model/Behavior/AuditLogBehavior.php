@@ -31,7 +31,7 @@ class AuditLogBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'index' => null,
         'type' => null,
         'blacklist' => ['created', 'modified'],

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditLog\Persister;
+namespace AuditStash\Persister;
 
 use AuditLog\PersisterInterface;
 use Cake\Datasource\ConnectionManager;
@@ -48,9 +48,9 @@ class RabbitMQPersister implements PersisterInterface
     }
 
     /**
-     * Persists all of the audit log event objects that are provided.
+     * Persists all the audit log event objects that are provided.
      *
-     * @param array $auditLogs An array of EventInterface objects
+     * @param \AuditLog\EventInterface[] $auditLogs An array of EventInterface objects
      * @return void
      */
     public function logEvents(array $auditLogs)

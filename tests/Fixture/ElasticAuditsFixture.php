@@ -6,21 +6,21 @@ use Cake\ElasticSearch\TestSuite\TestFixture;
 
 class ElasticAuditsFixture extends TestFixture
 {
-    public $connection = 'test_elastic';
+    public string $connection = 'test_elastic';
 
     /**
      * The table/index for this fixture.
      *
      * @var string
      */
-    public $table = 'audits';
+    public string $table = 'audits';
 
     /**
      * The mapping data.
      *
      * @var array
      */
-    public $schema = [
+    public array $schema = [
         'id' => ['type' => 'integer'],
         '@timestamp' => ['type' => 'date'],
         'transaction' => ['type' => 'text', 'index' => false],

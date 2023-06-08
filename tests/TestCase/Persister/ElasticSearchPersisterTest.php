@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditLog\Test\Persister;
+namespace AuditLog\Test\TestCase\Persister;
 
 use AuditLog\Event\AuditCreateEvent;
 use AuditLog\Event\AuditDeleteEvent;
@@ -9,9 +9,8 @@ use AuditLog\Event\AuditUpdateEvent;
 use AuditLog\Persister\ElasticSearchPersister;
 use Cake\Datasource\ConnectionManager;
 use Cake\ElasticSearch\IndexRegistry;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
-use DateTime;
 
 class ElasticSearchPersisterTest extends TestCase
 {
@@ -20,7 +19,7 @@ class ElasticSearchPersisterTest extends TestCase
      *
      * @var array<string>
      */
-    protected $fixtures = [
+    protected array $fixtures = [
         'plugin.AuditLog.ElasticArticles',
         'plugin.AuditLog.ElasticAudits',
         'plugin.AuditLog.ElasticAuthors',
@@ -212,11 +211,11 @@ class ElasticSearchPersisterTest extends TestCase
         $persister = new ElasticSearchPersister(['connection' => $client, 'index' => 'articles', 'type' => 'articles']);
         $original = [
             'title' => 'Old article title',
-            'published_date' => new FrozenTime('2015-04-12 20:20:21'),
+            'published_date' => new DateTime('2015-04-12 20:20:21'),
         ];
         $changed = [
             'title' => 'A new article',
-            'published_date' => new FrozenTime('2015-04-13 20:20:21'),
+            'published_date' => new DateTime('2015-04-13 20:20:21'),
         ];
 
         $events[] = new AuditUpdateEvent('1234', 50, 'articles', $changed, $original, 'Old article title');
@@ -263,7 +262,7 @@ class ElasticSearchPersisterTest extends TestCase
         $persister = new ElasticSearchPersister(['connection' => $client, 'index' => 'articles', 'type' => 'articles']);
         $original = [
             'title' => 'Old article title',
-            'published_date' => new FrozenTime('2015-04-12 20:20:21'),
+            'published_date' => new DateTime('2015-04-12 20:20:21'),
         ];
 
         $events[] = new AuditDeleteEvent('1234', 50, 'articles', null, $original, 'Old article title');

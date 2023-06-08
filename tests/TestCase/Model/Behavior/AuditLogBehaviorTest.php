@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditLog\Test\Model\Behavior;
+namespace AuditLog\Test\TestCase\Model\Behavior;
 
 use ArrayObject;
 use AuditLog\Event\AuditCreateEvent;

@@ -10,7 +10,7 @@ use Cake\ElasticSearch\Datasource\Connection;
 use Elastica\Document;
 
 /**
- * Implementes audit logs events persisting using Elasticsearch.
+ * Implements audit logs events persisting using Elasticsearch.
  */
 class ElasticSearchPersister implements PersisterInterface
 {
@@ -52,6 +52,7 @@ class ElasticSearchPersister implements PersisterInterface
      *
      * @param array $options Options for this persister.
      * @return void
+     * @throws \AuditLog\Exception
      */
     public function __construct($options = [])
     {
@@ -75,9 +76,9 @@ class ElasticSearchPersister implements PersisterInterface
     }
 
     /**
-     * Persists all of the audit log event objects that are provided.
+     * Persists all the audit log event objects that are provided.
      *
-     * @param array $auditLogs An array of EventInterface objects
+     * @param \AuditLog\EventInterface[] $auditLogs An array of EventInterface objects
      * @return void
      */
     public function logEvents(array $auditLogs)
@@ -91,7 +92,7 @@ class ElasticSearchPersister implements PersisterInterface
     /**
      * Transforms the EventInterface objects to Elastica Documents.
      *
-     * @param array $auditLogs An array of EventInterface objects.
+     * @param \AuditLog\EventInterface[] $auditLogs An array of EventInterface objects.
      * @return \Elastica\Document[]
      */
     protected function transformToDocuments($auditLogs)
@@ -126,7 +127,7 @@ class ElasticSearchPersister implements PersisterInterface
      * id in elastic search. Only enable this feature if you know that your transactions are
      * only comprised of a single event log per commit.
      *
-     * @param bool $use Whether or not to copy the transactionId as the document id
+     * @param bool $use Whether to copy the transactionId as the document id
      * @return void
      */
     public function reuseTransactionId($use = true)
@@ -137,7 +138,7 @@ class ElasticSearchPersister implements PersisterInterface
     /**
      * Sets the client connection to elastic search.
      *
-     * @param \Cake\ElasticSearch\Datasource\Connection $connection The conneciton to elastic search
+     * @param \Cake\ElasticSearch\Datasource\Connection $connection The connection to elastic search
      * @return $this
      */
     public function setConnection(Connection $connection)

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditLog\Test\Persister;
+namespace AuditLog\Test\TestCase\Persister;
 
 use AuditLog\Event\AuditCreateEvent;
 use AuditLog\Event\AuditDeleteEvent;

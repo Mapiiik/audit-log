@@ -61,7 +61,7 @@ abstract class BaseEvent implements EventInterface
      *
      * @return array|null
      */
-    public function getOriginal()
+    public function getOriginal(): ?array
     {
         return $this->original;
     }
@@ -71,7 +71,7 @@ abstract class BaseEvent implements EventInterface
      *
      * @return array|null
      */
-    public function getChanged()
+    public function getChanged(): ?array
     {
         return $this->changed;
     }

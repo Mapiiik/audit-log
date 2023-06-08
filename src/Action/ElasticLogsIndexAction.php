@@ -5,6 +5,7 @@ namespace AuditLog\Action;
 
 use Cake\ElasticSearch\IndexRegistry;
 use Cake\Http\Response;
+use Cake\ORM\Table;
 use Crud\Action\IndexAction;
 
 /**
@@ -88,7 +89,7 @@ class ElasticLogsIndexAction extends IndexAction
      *
      * @return \AuditLog\Model\Index\AuditLogsIndex|\Cake\ElasticSearch\Index|\Cake\ORM\Table
      */
-    protected function _table()
+    protected function _table(): Table
     {
         return IndexRegistry::get('AuditLog.AuditLogs');
     }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditLog\Test\Meta;
+namespace AuditLog\Test\TestCase\Meta;
 
 use AuditLog\Event\AuditDeleteEvent;
 use AuditLog\Meta\ApplicationMetadata;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace AuditLog\Test\Model\Behavior;
+namespace AuditLog\Test\TestCase\Model\Behavior;
 
 use AuditLog\Event\AuditCreateEvent;
 use AuditLog\Event\AuditDeleteEvent;
@@ -20,7 +20,7 @@ class AuditIntegrationTest extends TestCase
      *
      * @var array<string>
      */
-    protected $fixtures = [
+    protected array $fixtures = [
         'core.Articles',
         'core.Comments',
         'core.Authors',
